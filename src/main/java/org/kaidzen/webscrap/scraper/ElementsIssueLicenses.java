@@ -19,8 +19,8 @@ public class ElementsIssueLicenses extends ElementScraper<IssuedLicense> {
     @Override
     public int pagesToScrap(String baseUrl) {
         List elements = requestForElements(baseUrl, 1);
-        int size = elements.size();
-        Object lastRow = elements.get(size);
+        int lastElement = elements.size() - 1;
+        Object lastRow = elements.get(lastElement);
         System.out.println(lastRow);
         return 1;
     }

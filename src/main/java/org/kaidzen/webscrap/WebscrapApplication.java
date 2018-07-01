@@ -1,7 +1,6 @@
 package org.kaidzen.webscrap;
 
 import org.kaidzen.webscrap.dao.IssuedLicenseRepository;
-import org.kaidzen.webscrap.model.IssuedLicense;
 import org.kaidzen.webscrap.scraper.IssuedLicenseScraper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -16,27 +15,27 @@ import javax.sql.DataSource;
 @SpringBootApplication
 @EnableJpaRepositories("org.kaidzen.webscrap.dao")
 @EntityScan("org.kaidzen.webscrap.model")
-public class WebscrapApplication implements CommandLineRunner{
+public class WebscrapApplication implements CommandLineRunner {
 
-//	@Autowired
-//	DataSource dataSource;
+    @Autowired
+    DataSource dataSource;
 
-	@Resource(name = "issuedLicenseScraper")
-	IssuedLicenseScraper issuedLicenseScraper;
+    @Resource(name = "issuedLicenseScraper")
+    private IssuedLicenseScraper issuedLicenseScraper;
 
-	@Autowired
-	IssuedLicenseRepository repository;
+    @Autowired
+    IssuedLicenseRepository repository;
 
-	public static void main(String[] args) {
-		SpringApplication.run(WebscrapApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(WebscrapApplication.class, args);
+    }
 
-	@Override
-	public void run(String... strings) {
+    @Override
+    public void run(String... strings) {
 //		System.out.println("DataSourcfe is: " +dataSource);
 //		Iterable<IssuedLicense> issuedLicensies = repository.findAll();
 //		issuedLicensies.forEach(System.out::println);
 
-		issuedLicenseScraper.scrap();
-	}
+        issuedLicenseScraper.scrap();
+    }
 }
