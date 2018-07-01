@@ -18,8 +18,8 @@ import javax.sql.DataSource;
 @EntityScan("org.kaidzen.webscrap.model")
 public class WebscrapApplication implements CommandLineRunner{
 
-	@Autowired
-	DataSource dataSource;
+//	@Autowired
+//	DataSource dataSource;
 
 	@Resource(name = "issuedLicenseScraper")
 	IssuedLicenseScraper issuedLicenseScraper;
@@ -33,8 +33,10 @@ public class WebscrapApplication implements CommandLineRunner{
 
 	@Override
 	public void run(String... strings) {
-		System.out.println("DataSourcfe is: " +dataSource);
-		Iterable<IssuedLicense> issuedLicensies = repository.findAll();
-		issuedLicensies.forEach(System.out::println);
+//		System.out.println("DataSourcfe is: " +dataSource);
+//		Iterable<IssuedLicense> issuedLicensies = repository.findAll();
+//		issuedLicensies.forEach(System.out::println);
+
+		issuedLicenseScraper.scrap();
 	}
 }
