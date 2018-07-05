@@ -22,18 +22,18 @@ public class ElementsToIssuedLicenseMapper implements Function<Element, IssuedLi
             LOG.error("Please, check scrapped element for children amounts: {}", element);
             throw new IllegalArgumentException("Can't map with this: " + element);
         }
-        IssuedLicense issuedLicense = new IssuedLicense();
         //TODO Add Dao with mapped columns;
-        issuedLicense.setId(Integer.valueOf(getText(0)));
-        issuedLicense.setType(getText(1));
-        issuedLicense.setLicense(getText(2));
-        issuedLicense.setEdrpo(Integer.valueOf(getText(3)));
-        issuedLicense.setTheLicensee(getText(4));
-        issuedLicense.setAdress(getText(5));
-        issuedLicense.setIssueDate(LocalDate.parse(getText(6)));
-        issuedLicense.setValidToDate(LocalDate.parse(getText(7)));
 
-        return issuedLicense;
+        return new IssuedLicense.Builder()
+                .id(Integer.valueOf(getText(0)))
+                .type(getText(1))
+                .license(getText(2))
+                .edrpo(Integer.valueOf(getText(3)))
+                .theLicensee(getText(4))
+                .address(getText(5))
+                .issueDate(LocalDate.parse(getText(6)))
+                .validToDate(LocalDate.parse(getText(7)))
+                .build();
     }
 
     private String getText(int index) {

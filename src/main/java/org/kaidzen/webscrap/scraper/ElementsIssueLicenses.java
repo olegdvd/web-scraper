@@ -1,6 +1,7 @@
 package org.kaidzen.webscrap.scraper;
 
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.kaidzen.webscrap.model.IssuedLicense;
 
 import java.util.List;
@@ -18,16 +19,19 @@ public class ElementsIssueLicenses extends ElementScraper<IssuedLicense> {
 
     @Override
     public int pagesToScrap(String baseUrl) {
-        List elements = requestForElements(baseUrl, 1);
+        List elements = documentForPage(baseUrl, 1);
         int lastElement = elements.size() - 1;
-        Object lastRow = elements.get(lastElement);
+        Elements lastRow = (Elements) elements.get(lastElement);
+        Elements res = lastRow.select("#pages a");
+        String pages = res.last().text();
         System.out.println(lastRow);
+        System.out.println("------------------>" +pages);
         return 1;
     }
 
     @Override
     public List<IssuedLicense> scrapElements(String pagedUrl, int pageIndex) {
-        return requestForElements(pagedUrl, pageIndex).stream()
+        return documentForPage(pagedUrl, pageIndex).stream()
                 .map(elementsMapper)
                 .collect(toList());
     }

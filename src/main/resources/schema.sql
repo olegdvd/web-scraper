@@ -7,7 +7,7 @@ CREATE TABLE issuedLicenses (
   license VARCHAR(14) NOT NULL,
   edrpo INT NOT NULL,
   theLicensee VARCHAR(180) NOT NULL,
-  adress VARCHAR(200) NOT NULL,
+  address VARCHAR(200) NOT NULL,
   issueDate DATE NOT NULL,
   validToDate DATE NOT NULL,
 

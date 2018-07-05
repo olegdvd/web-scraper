@@ -18,7 +18,7 @@ import javax.sql.DataSource;
 public class WebscrapApplication implements CommandLineRunner {
 
     @Autowired
-    DataSource dataSource;
+    private DataSource dataSourceLocal;
 
     @Resource(name = "issuedLicenseScraper")
     private IssuedLicenseScraper issuedLicenseScraper;

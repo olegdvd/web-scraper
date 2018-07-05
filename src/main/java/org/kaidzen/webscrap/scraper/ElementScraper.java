@@ -26,8 +26,8 @@ public abstract class ElementScraper<T> {
 
     public abstract List<T> scrapElements (String pagedUrl, int pageIndex);
 
-    protected Elements requestForElements(String pagedUrl, int pageIndex) {
-        String pageUrl = String.format(pagedUrl, pageIndex);
+    protected Elements documentForPage(String pagedUrl, int pageNumber) {
+        String pageUrl = getFullUrl(pagedUrl, pageNumber);
         Optional<HttpUrl> url = Optional.ofNullable(HttpUrl.parse(pageUrl));
         if (url.isPresent()){
             Request request = new Request.Builder().url(url.get()).get().build();
@@ -42,5 +42,9 @@ public abstract class ElementScraper<T> {
         }
         LOG.warn("Failed to scrap from URL: {}", pagedUrl);
         return new Elements(Collections.emptyList());
+    }
+
+    protected String getFullUrl(String pagedUrl, int pageIndex) {
+        return String.format(pagedUrl, pageIndex);
     }
 }
