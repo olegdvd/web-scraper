@@ -33,6 +33,7 @@ public class ElementsToIssuedLicenseMapper implements Function<Element, IssuedLi
                 .address(getText(5))
                 .issueDate(LocalDate.parse(getText(6)))
                 .validToDate(LocalDate.parse(getText(7)))
+                .timestamp()
                 .build();
     }
 

@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 
+import static org.kaidzen.webscrap.util.StandardTimeClock.timeNow;
+
 @Entity
 public class IssuedLicense {
 
@@ -44,67 +46,6 @@ public class IssuedLicense {
                 address,
                 issueDate.toString(),
                 validToDate.toString());
-    }
-
-    public static class Builder {
-        private Integer id;
-        private String type;
-        private String license;
-        private Integer edrpo;
-        private String theLicensee;
-        private String address;
-        private LocalDate issueDate;
-        private LocalDate validToDate;
-        private Timestamp timestamp;
-
-        public Builder id(Integer id) {
-            this.id = id;
-            return this;
-        }
-
-        public Builder type(String type) {
-            this.type = type;
-            return this;
-        }
-
-        public Builder license(String license) {
-            this.license = license;
-            return this;
-        }
-
-        public Builder edrpo(Integer edrpo) {
-            this.edrpo = edrpo;
-            return this;
-        }
-
-        public Builder theLicensee(String theLicensee) {
-            this.theLicensee = theLicensee;
-            return this;
-        }
-
-        public Builder address(String address) {
-            this.address = address;
-            return this;
-        }
-
-        public Builder issueDate(LocalDate issueDate) {
-            this.issueDate = issueDate;
-            return this;
-        }
-
-        public Builder validToDate(LocalDate validToDate) {
-            this.validToDate = validToDate;
-            return this;
-        }
-
-        public Builder timestamp(Timestamp timestamp) {
-            this.timestamp = timestamp;
-            return this;
-        }
-
-        public IssuedLicense build() {
-            return new IssuedLicense(this);
-        }
     }
 
     @Override
@@ -228,5 +169,66 @@ public class IssuedLicense {
 
     public void setMd5Value(String md5Value) {
         this.md5Value = md5Value;
+    }
+
+    public static class Builder {
+        private Integer id;
+        private String type;
+        private String license;
+        private Integer edrpo;
+        private String theLicensee;
+        private String address;
+        private LocalDate issueDate;
+        private LocalDate validToDate;
+        private Timestamp timestamp;
+
+        public Builder id(Integer id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder type(String type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder license(String license) {
+            this.license = license;
+            return this;
+        }
+
+        public Builder edrpo(Integer edrpo) {
+            this.edrpo = edrpo;
+            return this;
+        }
+
+        public Builder theLicensee(String theLicensee) {
+            this.theLicensee = theLicensee;
+            return this;
+        }
+
+        public Builder address(String address) {
+            this.address = address;
+            return this;
+        }
+
+        public Builder issueDate(LocalDate issueDate) {
+            this.issueDate = issueDate;
+            return this;
+        }
+
+        public Builder validToDate(LocalDate validToDate) {
+            this.validToDate = validToDate;
+            return this;
+        }
+
+        public Builder timestamp() {
+            this.timestamp = Timestamp.valueOf(timeNow());
+            return this;
+        }
+
+        public IssuedLicense build() {
+            return new IssuedLicense(this);
+        }
     }
 }

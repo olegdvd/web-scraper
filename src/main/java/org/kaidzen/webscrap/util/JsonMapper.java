@@ -14,7 +14,6 @@ public class JsonMapper {
 
     private JsonMapper() {
     }
-
     public static List<String> toPrettyString(List<IssuedLicense> themes) {
         return themes.stream()
                 .map(GSON::toJson)

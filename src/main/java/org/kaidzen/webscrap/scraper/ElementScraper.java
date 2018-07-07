@@ -4,12 +4,11 @@ import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import org.jsoup.Jsoup;
-import org.jsoup.select.Elements;
+import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -24,24 +23,24 @@ public abstract class ElementScraper<T> {
 
     public abstract int pagesToScrap(String baseUrl);
 
-    public abstract List<T> scrapElements (String pagedUrl, int pageIndex);
+    public abstract List<T> scrapElements(String pagedUrl, Document document);
 
-    protected Elements documentForPage(String pagedUrl, int pageNumber) {
-        String pageUrl = getFullUrl(pagedUrl, pageNumber);
-        Optional<HttpUrl> url = Optional.ofNullable(HttpUrl.parse(pageUrl));
-        if (url.isPresent()){
+    protected Document documentForPage(String pagedUrl, int pageNumber) {
+        String fullUrl = getFullUrl(pagedUrl, pageNumber);
+        Optional<HttpUrl> url = Optional.ofNullable(HttpUrl.parse(fullUrl));
+        if (url.isPresent()) {
             Request request = new Request.Builder().url(url.get()).get().build();
             String html = null;
             try {
                 html = Objects.requireNonNull(CLIENT.newCall(request).execute().body()).string();
             } catch (IOException e) {
-                LOG.error("Source server is unreachable or changed/wrong URL: {}", pageUrl);
+                LOG.error("Source server is unreachable or changed/wrong URL: {}", fullUrl);
             }
 
-            return Jsoup.parse(html).select("tr");
+            return Jsoup.parse(html);
         }
-        LOG.warn("Failed to scrap from URL: {}", pagedUrl);
-        return new Elements(Collections.emptyList());
+        LOG.warn("Failed to scrap from URL: {}", fullUrl);
+        throw new RuntimeException("Failed to parse url: " + fullUrl);
     }
 
     protected String getFullUrl(String pagedUrl, int pageIndex) {

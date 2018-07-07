@@ -18,13 +18,11 @@ import javax.sql.DataSource;
 public class WebscrapApplication implements CommandLineRunner {
 
     @Autowired
+    IssuedLicenseRepository repository;
+    @Autowired
     private DataSource dataSourceLocal;
-
     @Resource(name = "issuedLicenseScraper")
     private IssuedLicenseScraper issuedLicenseScraper;
-
-    @Autowired
-    IssuedLicenseRepository repository;
 
     public static void main(String[] args) {
         SpringApplication.run(WebscrapApplication.class, args);

@@ -45,7 +45,7 @@ public class ConfigWebScrapConfiguration {
 
     @Bean
     public IssuedLicenseScraper issuedLicenseScraper() {
-        return new IssuedLicenseScraper(issuedLicenseUrl, elementsIssueLicenses());
+        return new IssuedLicenseScraper(issuedLicenseUrl, elementsIssueLicenses(), issuedLicenseElementsMapper());
     }
 
     @Bean
