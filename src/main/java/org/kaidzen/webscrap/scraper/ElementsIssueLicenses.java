@@ -6,15 +6,16 @@ import org.jsoup.select.Elements;
 import org.kaidzen.webscrap.model.IssuedLicense;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
 import static java.util.stream.Collectors.toList;
 
 public class ElementsIssueLicenses extends ElementScraper<IssuedLicense> {
 
-    private final Function<Element, IssuedLicense> elementsMapper;
+    private final Function<Element, Optional<IssuedLicense>> elementsMapper;
 
-    public ElementsIssueLicenses(Function<Element, IssuedLicense> elementsMapper) {
+    public ElementsIssueLicenses(Function<Element, Optional<IssuedLicense>> elementsMapper) {
         this.elementsMapper = elementsMapper;
     }
 
@@ -23,7 +24,7 @@ public class ElementsIssueLicenses extends ElementScraper<IssuedLicense> {
         Document document = documentForPage(baseUrl, 1);
         List elements = document.select("tr");
         int lastElement = elements.size() - 1;
-        Elements lastRow = (Elements) elements.get(lastElement);
+        Element lastRow = (Element) elements.get(lastElement);
         Elements res = lastRow.select("#pages a");
         String pages = res.last().text();
         System.out.println(lastRow);
@@ -32,9 +33,11 @@ public class ElementsIssueLicenses extends ElementScraper<IssuedLicense> {
     }
 
     @Override
-    public List<IssuedLicense> scrapElements(String pagedUrl, Document document) {
-        return document.select("tr").stream()
+    public List<IssuedLicense> scrapElements(String selection, Document document) {
+        return document.select(selection).stream()
                 .map(elementsMapper)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(toList());
     }
 }

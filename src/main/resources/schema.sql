@@ -10,6 +10,9 @@ CREATE TABLE IF NOT EXISTS issuedLicenses (
   address     VARCHAR(200) NOT NULL,
   issueDate   DATE         NOT NULL,
   validToDate DATE         NOT NULL,
-  timestamp   TIMESTAMP DEFAULT NOT NULL,
+  timestamp   TIMESTAMP    NOT NULL DEFAULT now(),
+
   PRIMARY KEY (id)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+)
+  ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;

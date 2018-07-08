@@ -7,12 +7,14 @@ import org.kaidzen.webscrap.util.Md5Calculator;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 
 import static org.kaidzen.webscrap.util.StandardTimeClock.timeNow;
 
 @Entity
+@Table(name = "issuedlicenses")
 public class IssuedLicense {
 
     @Id

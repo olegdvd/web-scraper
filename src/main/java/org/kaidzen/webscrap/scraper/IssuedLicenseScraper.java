@@ -1,25 +1,23 @@
 package org.kaidzen.webscrap.scraper;
 
-import org.jsoup.nodes.Element;
-import org.kaidzen.webscrap.model.IssuedLicense;
+import org.kaidzen.webscrap.service.IssuedLicenseService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.function.Function;
 import java.util.stream.IntStream;
 
 public class IssuedLicenseScraper {
 
     private static final Logger LOG = LoggerFactory.getLogger(IssuedLicenseScraper.class);
     private final ElementsIssueLicenses elementsIssueLicenses;
-    private final Function<Element, IssuedLicense> licenseMapper;
     private final String baseUrl;
+    @Autowired
+    private IssuedLicenseService licenseService;
 
-    public IssuedLicenseScraper(String baseUrl, ElementsIssueLicenses elementsIssueLicenses,
-                                Function<Element, IssuedLicense> licenseMapper) {
+    public IssuedLicenseScraper(String baseUrl, ElementsIssueLicenses elementsIssueLicenses) {
         this.baseUrl = baseUrl;
         this.elementsIssueLicenses = elementsIssueLicenses;
-        this.licenseMapper = licenseMapper;
     }
 
     public void scrap() {
@@ -27,8 +25,9 @@ public class IssuedLicenseScraper {
         LOG.info("There is [{}] pages to scrap", lastPageNumber);
         IntStream.rangeClosed(1, 2).boxed()
                 .map(integer -> elementsIssueLicenses.documentForPage(baseUrl, integer))
-                .map(licenseMapper::apply)
-                .forEach(issuedLicense -> LOG.info("We got it: \\n {}", issuedLicense));
+                .map(document -> elementsIssueLicenses.scrapElements("tr", document))
+                .forEach(issuedLicenses -> licenseService.saveAll(issuedLicenses));
+
     }
 
 }

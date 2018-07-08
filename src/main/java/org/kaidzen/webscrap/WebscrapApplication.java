@@ -1,6 +1,6 @@
 package org.kaidzen.webscrap;
 
-import org.kaidzen.webscrap.dao.IssuedLicenseRepository;
+import org.kaidzen.webscrap.repository.IssuedLicenseRepository;
 import org.kaidzen.webscrap.scraper.IssuedLicenseScraper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -13,7 +13,7 @@ import javax.annotation.Resource;
 import javax.sql.DataSource;
 
 @SpringBootApplication
-@EnableJpaRepositories("org.kaidzen.webscrap.dao")
+@EnableJpaRepositories("org.kaidzen.webscrap.repository")
 @EntityScan("org.kaidzen.webscrap.model")
 public class WebscrapApplication implements CommandLineRunner {
 

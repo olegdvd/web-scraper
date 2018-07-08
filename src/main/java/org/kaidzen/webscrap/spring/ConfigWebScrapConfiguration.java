@@ -12,6 +12,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import javax.sql.DataSource;
+import java.util.Optional;
 import java.util.function.Function;
 
 @Configuration
@@ -34,7 +35,7 @@ public class ConfigWebScrapConfiguration {
     private String driver;
 
     @Bean
-    public Function<Element, IssuedLicense> issuedLicenseElementsMapper() {
+    public Function<Element, Optional<IssuedLicense>> issuedLicenseElementsMapper() {
         return new ElementsToIssuedLicenseMapper();
     }
 
@@ -45,7 +46,7 @@ public class ConfigWebScrapConfiguration {
 
     @Bean
     public IssuedLicenseScraper issuedLicenseScraper() {
-        return new IssuedLicenseScraper(issuedLicenseUrl, elementsIssueLicenses(), issuedLicenseElementsMapper());
+        return new IssuedLicenseScraper(issuedLicenseUrl, elementsIssueLicenses());
     }
 
     @Bean
