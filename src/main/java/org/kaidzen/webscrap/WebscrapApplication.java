@@ -30,10 +30,6 @@ public class WebscrapApplication implements CommandLineRunner {
 
     @Override
     public void run(String... strings) {
-//		System.out.println("DataSourcfe is: " +dataSource);
-//		Iterable<IssuedLicense> issuedLicensies = repository.findAll();
-//		issuedLicensies.forEach(System.out::println);
-
         issuedLicenseScraper.scrap();
     }
 }

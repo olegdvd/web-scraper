@@ -10,6 +10,5 @@ import java.util.List;
 @Repository
 public interface IssuedLicenseRepository extends JpaRepository<IssuedLicense, Integer>{
 
-    IssuedLicense findById(Integer  id);
     List<IssuedLicense> save(Collection<IssuedLicense> licenses);
 }

@@ -5,6 +5,7 @@ import org.kaidzen.webscrap.map.ElementsToIssuedLicenseMapper;
 import org.kaidzen.webscrap.model.IssuedLicense;
 import org.kaidzen.webscrap.scraper.ElementsIssueLicenses;
 import org.kaidzen.webscrap.scraper.IssuedLicenseScraper;
+import org.kaidzen.webscrap.util.StandardTimeClock;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,8 +36,13 @@ public class ConfigWebScrapConfiguration {
     private String driver;
 
     @Bean
+    public StandardTimeClock clock() {
+        return new StandardTimeClock();
+    }
+
+    @Bean
     public Function<Element, Optional<IssuedLicense>> issuedLicenseElementsMapper() {
-        return new ElementsToIssuedLicenseMapper();
+        return new ElementsToIssuedLicenseMapper(clock());
     }
 
     @Bean
@@ -50,7 +56,7 @@ public class ConfigWebScrapConfiguration {
     }
 
     @Bean
-    public DataSource dataSourceLocal(){
+    public DataSource dataSourceLocal() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setUrl(url);
         dataSource.setUsername(username);

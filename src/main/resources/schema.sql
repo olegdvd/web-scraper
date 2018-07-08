@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS issuedLicenses;
 
 CREATE TABLE IF NOT EXISTS issuedLicenses (
 
-  id          INT          NOT NULL,
+  licenseId   INT          NOT NULL,
   type        VARCHAR(100) NOT NULL,
   license     VARCHAR(14)  NOT NULL,
   edrpo       INT          NOT NULL,
@@ -11,8 +11,9 @@ CREATE TABLE IF NOT EXISTS issuedLicenses (
   issueDate   DATE         NOT NULL,
   validToDate DATE         NOT NULL,
   timestamp   TIMESTAMP    NOT NULL DEFAULT now(),
+  md5         VARCHAR(32)  NOT NULL,
 
-  PRIMARY KEY (id)
+  PRIMARY KEY (licenseId)
 )
   ENGINE = InnoDB
   DEFAULT CHARSET = utf8;

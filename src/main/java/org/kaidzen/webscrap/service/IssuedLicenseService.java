@@ -25,8 +25,8 @@ public class IssuedLicenseService implements IssuedService {
 
     @Override
     public void saveAll(Collection<IssuedLicense> licenses) {
-        List<IssuedLicense> result = licenseRepository.save(licenses);
-        LOG.info("Saved to base rows: {}", result.size());
+        licenseRepository.save(licenses);
+        LOG.info("Saved to base rows: {}", licenses.size());
     }
 
     @Override

@@ -1,10 +1,10 @@
 package org.kaidzen.webscrap.map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.kaidzen.webscrap.model.IssuedLicense;
+import org.kaidzen.webscrap.util.StandardTimeClock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,29 +18,32 @@ public class ElementsToIssuedLicenseMapper implements Function<Element, Optional
 
     private static final Logger LOG = LoggerFactory.getLogger(ElementsToIssuedLicenseMapper.class);
     private static final int FIELDS_TO_MAP = 8; //As for IssuedLicense.class
-    private Elements innerElements;
+    private final StandardTimeClock clock;
     private List<String> stringList;
+
+    public ElementsToIssuedLicenseMapper(StandardTimeClock clock) {
+        this.clock = clock;
+    }
 
     @Override
     public Optional<IssuedLicense> apply(Element element) {
-        innerElements = element.children();
+        Elements innerElements = element.children();
         stringList = innerElements.stream()
                 .map(Element::text)
                 .map(string -> string.replace("&nbsp;", ""))
                 .collect(Collectors.toList());
         if (checkList(stringList)) {
-            Optional<IssuedLicense> license = Optional.ofNullable(new IssuedLicense.Builder()
-                    .id(getInteger(0))
+            return Optional.ofNullable(new IssuedLicense.Builder(clock)
+                    .id(Integer.valueOf(getText(0)))
                     .type(getText(1))
                     .license(getText(2))
-                    .edrpo(Integer.valueOf(getText(3).replaceAll("\\s", "")))
+                    .edrpo(Integer.valueOf(getText(3)))
                     .theLicensee(getText(4))
                     .address(getText(5))
                     .issueDate(LocalDate.parse(getText(6)))
                     .validToDate(LocalDate.parse(getText(7)))
                     .timestamp()
                     .build());
-            return license;
         }
         //TODO Add Dao with mapped columns;
         LOG.warn("Skipped  scrapped element: {}", element);
@@ -48,31 +51,16 @@ public class ElementsToIssuedLicenseMapper implements Function<Element, Optional
 
     }
 
-    private Integer getInteger(int index) {
-        return NumberUtils.createInteger(getText(index).replaceAll("\\s", ""));
-    }
-
     private boolean checkList(List<String> stringList) {
         String first = stringList.get(0);
         if (stringList.size() != FIELDS_TO_MAP) return false;
         if (StringUtils.isNumericSpace(first)) return false;
         if (StringUtils.isEmpty(first)) return false;
-        if ("№ ".equals(first)) return false;
-        return true;
-    }
-
-    private String cleanText(int i) {
-        return getText(i).replace("&nbsp;", "");
-    }
-
-    private boolean elementsFilter() {
-        if (innerElements.size() != FIELDS_TO_MAP) return false;
-        if (StringUtils.isNumericSpace(innerElements.first().text())) return false;
-        if (StringUtils.isNotEmpty(innerElements.first().text())) return false;
-        return true;
+        return !"№ ".equals(first);
     }
 
     private String getText(int index) {
-        return stringList.get(index);
+        String str = stringList.get(index);
+        return str.substring(0, str.length() - 1);
     }
 }

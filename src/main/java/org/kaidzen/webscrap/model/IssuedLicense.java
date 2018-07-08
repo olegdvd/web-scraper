@@ -4,21 +4,22 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.kaidzen.webscrap.util.Md5Calculator;
+import org.kaidzen.webscrap.util.StandardTimeClock;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 
-import static org.kaidzen.webscrap.util.StandardTimeClock.timeNow;
-
 @Entity
-@Table(name = "issuedlicenses")
+@Table(name = "issuedLicenses")
 public class IssuedLicense {
 
     @Id
-    private Integer id;
+    @Column(name = "licenseId")
+    private Integer licenseId;
     private String type;
     private String license;
     private Integer edrpo;
@@ -29,8 +30,8 @@ public class IssuedLicense {
     private Timestamp timestamp;
     private String md5Value;
 
-    public IssuedLicense(Builder builder) {
-        this.id = builder.id;
+    IssuedLicense(Builder builder) {
+        this.licenseId = builder.id;
         this.type = builder.type;
         this.license = builder.license;
         this.edrpo = builder.edrpo;
@@ -40,7 +41,7 @@ public class IssuedLicense {
         this.validToDate = builder.validToDate;
         this.timestamp = builder.timestamp;
         this.md5Value = Md5Calculator.calculateMd5(
-                id.toString(),
+                licenseId.toString(),
                 type,
                 license,
                 edrpo.toString(),
@@ -53,7 +54,7 @@ public class IssuedLicense {
     @Override
     public String toString() {
         return new ToStringBuilder(IssuedLicense.class)
-                .append("id", id)
+                .append("licenseId", licenseId)
                 .append("type", type)
                 .append("license", license)
                 .append("edrpo", edrpo)
@@ -72,7 +73,7 @@ public class IssuedLicense {
         if (!(obj instanceof IssuedLicense)) return false;
         IssuedLicense generic = (IssuedLicense) obj;
         return new EqualsBuilder()
-                .append(this.id, generic.id)
+                .append(this.licenseId, generic.licenseId)
                 .append(this.license, generic.license)
                 .append(this.edrpo, generic.edrpo)
                 .append(this.issueDate, generic.issueDate)
@@ -84,7 +85,7 @@ public class IssuedLicense {
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
-                .append(id)
+                .append(licenseId)
                 .append(license)
                 .append(edrpo)
                 .append(issueDate)
@@ -93,87 +94,48 @@ public class IssuedLicense {
                 .build();
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
+    public Integer getLicenseId() {
+        return licenseId;
     }
 
     public String getType() {
         return type;
     }
 
-    public void setType(String type) {
-        this.type = type;
-    }
-
     public String getLicense() {
         return license;
-    }
-
-    public void setLicense(String license) {
-        this.license = license;
     }
 
     public Integer getEdrpo() {
         return edrpo;
     }
 
-    public void setEdrpo(Integer edrpo) {
-        this.edrpo = edrpo;
-    }
-
     public String getTheLicensee() {
         return theLicensee;
-    }
-
-    public void setTheLicensee(String theLicensee) {
-        this.theLicensee = theLicensee;
     }
 
     public String getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
     public LocalDate getIssueDate() {
         return issueDate;
-    }
-
-    public void setIssueDate(LocalDate issueDate) {
-        this.issueDate = issueDate;
     }
 
     public LocalDate getValidToDate() {
         return validToDate;
     }
 
-    public void setValidToDate(LocalDate validToDate) {
-        this.validToDate = validToDate;
-    }
-
     public Timestamp getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(Timestamp timestamp) {
-        this.timestamp = timestamp;
+        return this.timestamp;
     }
 
     public String getMd5Value() {
         return md5Value;
     }
 
-    public void setMd5Value(String md5Value) {
-        this.md5Value = md5Value;
-    }
-
     public static class Builder {
+        private final StandardTimeClock clock;
         private Integer id;
         private String type;
         private String license;
@@ -183,6 +145,10 @@ public class IssuedLicense {
         private LocalDate issueDate;
         private LocalDate validToDate;
         private Timestamp timestamp;
+
+        public Builder(StandardTimeClock clock) {
+            this.clock = clock;
+        }
 
         public Builder id(Integer id) {
             this.id = id;
@@ -225,7 +191,7 @@ public class IssuedLicense {
         }
 
         public Builder timestamp() {
-            this.timestamp = Timestamp.valueOf(timeNow());
+            this.timestamp = clock.createTimestamp();
             return this;
         }
 
