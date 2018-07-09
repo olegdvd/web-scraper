@@ -15,6 +15,7 @@ public class ElementsIssueLicenses extends ElementScraper<IssuedLicense> {
 
     private final Function<Element, Optional<IssuedLicense>> elementsMapper;
 
+
     public ElementsIssueLicenses(Function<Element, Optional<IssuedLicense>> elementsMapper) {
         this.elementsMapper = elementsMapper;
     }
@@ -33,11 +34,13 @@ public class ElementsIssueLicenses extends ElementScraper<IssuedLicense> {
     }
 
     @Override
-    public List<IssuedLicense> scrapElements(String selection, Document document) {
+    public List<IssuedLicense> takeElements(String selection, Document document) {
         return document.select(selection).stream()
                 .map(elementsMapper)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(toList());
     }
+
+
 }

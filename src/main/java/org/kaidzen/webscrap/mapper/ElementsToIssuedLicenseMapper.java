@@ -1,4 +1,4 @@
-package org.kaidzen.webscrap.map;
+package org.kaidzen.webscrap.mapper;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.Element;

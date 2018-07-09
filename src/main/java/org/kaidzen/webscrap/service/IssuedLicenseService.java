@@ -2,6 +2,7 @@ package org.kaidzen.webscrap.service;
 
 import org.kaidzen.webscrap.model.IssuedLicense;
 import org.kaidzen.webscrap.repository.IssuedLicenseRepository;
+import org.kaidzen.webscrap.util.WriteBulkToFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,11 @@ public class IssuedLicenseService implements IssuedService {
 
     @Autowired
     private IssuedLicenseRepository licenseRepository;
+    private final WriteBulkToFile bulkToFile;
+
+    public IssuedLicenseService() {
+        bulkToFile = new WriteBulkToFile();
+    }
 
     @Override
     public void saveLicense(IssuedLicense license) {
@@ -32,6 +38,11 @@ public class IssuedLicenseService implements IssuedService {
     @Override
     public List<IssuedLicense> findAllLicenses() {
         return licenseRepository.findAll();
+    }
+
+    @Override
+    public void saveToFile(String fileName, List<String> licenses) {
+        bulkToFile.writeToFile(fileName, licenses);
     }
 
 

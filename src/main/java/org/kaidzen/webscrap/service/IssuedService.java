@@ -10,4 +10,5 @@ public interface IssuedService {
     void saveLicense(IssuedLicense license);
     void saveAll(Collection<IssuedLicense> licenses);
     List<IssuedLicense> findAllLicenses();
+    void saveToFile(String fileName, List<String> licenses);
 }

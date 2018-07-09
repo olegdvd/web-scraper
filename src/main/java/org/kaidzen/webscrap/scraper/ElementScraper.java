@@ -23,7 +23,7 @@ public abstract class ElementScraper<T> {
 
     public abstract int pagesToScrap(String baseUrl);
 
-    public abstract List<T> scrapElements(String pagedUrl, Document document);
+    public abstract List<T> takeElements(String pagedUrl, Document document);
 
     protected Document documentForPage(String pagedUrl, int pageNumber) {
         String fullUrl = getFullUrl(pagedUrl, pageNumber);

@@ -1,7 +1,8 @@
 package org.kaidzen.webscrap.spring;
 
 import org.jsoup.nodes.Element;
-import org.kaidzen.webscrap.map.ElementsToIssuedLicenseMapper;
+import org.kaidzen.webscrap.mapper.ElementsToIssuedLicenseMapper;
+import org.kaidzen.webscrap.mapper.ObjectToCsvMapper;
 import org.kaidzen.webscrap.model.IssuedLicense;
 import org.kaidzen.webscrap.scraper.ElementsIssueLicenses;
 import org.kaidzen.webscrap.scraper.IssuedLicenseScraper;
@@ -13,6 +14,8 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import javax.sql.DataSource;
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -43,6 +46,11 @@ public class ConfigWebScrapConfiguration {
     @Bean
     public Function<Element, Optional<IssuedLicense>> issuedLicenseElementsMapper() {
         return new ElementsToIssuedLicenseMapper(clock());
+    }
+
+    @Bean
+    public Function<Collection<IssuedLicense>, List<String>> objToCsvMapper(){
+        return new ObjectToCsvMapper<>();
     }
 
     @Bean

@@ -30,6 +30,6 @@ public class WebscrapApplication implements CommandLineRunner {
 
     @Override
     public void run(String... strings) {
-        issuedLicenseScraper.scrap();
+        issuedLicenseScraper.scrapToCsv("megoDB.csv");
     }
 }
