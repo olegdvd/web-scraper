@@ -56,7 +56,7 @@ public class ElementsToIssuedLicenseMapper implements Function<Element, Optional
         try {
             return Long.valueOf(getText(i).trim());
         } catch (NumberFormatException e) {
-            e.getMessage();
+            LOG.warn("EDRPO mapped to zero with id:{}", getText(0), e.getMessage());
             return Long.valueOf("0");
         }
     }
@@ -65,7 +65,7 @@ public class ElementsToIssuedLicenseMapper implements Function<Element, Optional
         try {
             return LocalDate.parse(getText(i));
         } catch (DateTimeParseException e) {
-            e.getMessage();
+            LOG.warn("Date mapped to now() with id:{}", getText(0), e.getMessage());
             return LocalDate.now();
         }
     }
