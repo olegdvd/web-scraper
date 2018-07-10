@@ -27,7 +27,7 @@ public class IssuedLicenseScraper {
     public IssuedLicenseScraper(String baseUrl, ElementsIssueLicenses elementsIssueLicenses) {
         this.baseUrl = baseUrl;
         this.elementsIssueLicenses = elementsIssueLicenses;
-        objToCsvMapper = new ObjectToCsvMapper<>();
+        objToCsvMapper = new ObjectToCsvMapper();
     }
 
     public void scrap() {
@@ -43,9 +43,9 @@ public class IssuedLicenseScraper {
 
     private Stream<List<IssuedLicense>> scrapedStream(){
 //        int lastPageNumber = elementsIssueLicenses.pagesToScrap(baseUrl);
-        int lastPageNumber = 2;
+        int lastPageNumber = 1860;
         LOG.info("There is [{}] pages to scrap", lastPageNumber);
-        return IntStream.rangeClosed(1, lastPageNumber).boxed()
+        return IntStream.rangeClosed(885, lastPageNumber).boxed()
                 .map(integer -> elementsIssueLicenses.documentForPage(baseUrl, integer))
                 .map(document -> elementsIssueLicenses.takeElements("tr", document));
     }

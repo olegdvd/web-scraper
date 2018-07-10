@@ -50,7 +50,7 @@ public class ConfigWebScrapConfiguration {
 
     @Bean
     public Function<Collection<IssuedLicense>, List<String>> objToCsvMapper(){
-        return new ObjectToCsvMapper<>();
+        return new ObjectToCsvMapper();
     }
 
     @Bean

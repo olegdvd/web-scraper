@@ -18,9 +18,11 @@ public class WriteBulkToFile {
 
     public void writeToFile(String fileName, List<String> stringsList){
         try {
+            ClassPathResource resource = new ClassPathResource(fileName);
+            Path filePath = Paths.get(resource.getPath());
             Path path = Paths.get(new ClassPathResource(fileName).getURI());
             System.out.println(path);
-            Path res = Files.write(path, stringsList, Charset.forName("UTF-8"), StandardOpenOption.APPEND);
+            Path res = Files.write(filePath, stringsList, Charset.forName("UTF-8"), StandardOpenOption.APPEND, StandardOpenOption.WRITE);
             LOG.info("Added to file: {}, {} lines", res, stringsList.size());
         } catch (IOException e) {
             LOG.warn("Can not get path to file: {}", fileName, e);

@@ -1,5 +1,6 @@
 package org.kaidzen.webscrap.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -19,15 +20,25 @@ public class IssuedLicense {
 
     @Id
     @Column(name = "licenseId")
+    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     private Integer licenseId;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private String type;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private String license;
-    private Integer edrpo;
+    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
+    private Long edrpo;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private String theLicensee;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private String address;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate issueDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate validToDate;
+    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     private Timestamp timestamp;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private String md5Value;
 
     IssuedLicense(Builder builder) {
@@ -65,6 +76,19 @@ public class IssuedLicense {
                 .append("timestamp", timestamp)
                 .append("md5Value", md5Value)
                 .build();
+    }
+
+    public String toCsv() {
+        return String.join(", ", String.valueOf(licenseId),
+                type,
+                license,
+                String.valueOf(edrpo),
+                theLicensee,
+                address,
+                issueDate.toString(),
+                validToDate.toString(),
+                timestamp.toString(),
+                md5Value);
     }
 
     @Override
@@ -106,7 +130,7 @@ public class IssuedLicense {
         return license;
     }
 
-    public Integer getEdrpo() {
+    public Long getEdrpo() {
         return edrpo;
     }
 
@@ -139,7 +163,7 @@ public class IssuedLicense {
         private Integer id;
         private String type;
         private String license;
-        private Integer edrpo;
+        private Long edrpo;
         private String theLicensee;
         private String address;
         private LocalDate issueDate;
@@ -165,7 +189,7 @@ public class IssuedLicense {
             return this;
         }
 
-        public Builder edrpo(Integer edrpo) {
+        public Builder edrpo(Long edrpo) {
             this.edrpo = edrpo;
             return this;
         }

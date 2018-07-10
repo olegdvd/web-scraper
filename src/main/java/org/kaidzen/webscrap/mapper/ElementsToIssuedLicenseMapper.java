@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -37,18 +38,36 @@ public class ElementsToIssuedLicenseMapper implements Function<Element, Optional
                     .id(Integer.valueOf(getText(0)))
                     .type(getText(1))
                     .license(getText(2))
-                    .edrpo(Integer.valueOf(getText(3)))
+                    .edrpo(getEdrpoOrZero(3))
                     .theLicensee(getText(4))
                     .address(getText(5))
-                    .issueDate(LocalDate.parse(getText(6)))
-                    .validToDate(LocalDate.parse(getText(7)))
+                    .issueDate(getDateOrNow(6))
+                    .validToDate(getDateOrNow(7))
                     .timestamp()
                     .build());
         }
         //TODO Add Dao with mapped columns;
-        LOG.warn("Skipped  scrapped element: {}", element);
+        LOG.warn("Skipped  scrapped element");
         return Optional.empty();
 
+    }
+
+    private Long getEdrpoOrZero(int i) {
+        try {
+            return Long.valueOf(getText(i).trim());
+        } catch (NumberFormatException e) {
+            e.getMessage();
+            return Long.valueOf("0");
+        }
+    }
+
+    private LocalDate getDateOrNow(int i) {
+        try {
+            return LocalDate.parse(getText(i));
+        } catch (DateTimeParseException e) {
+            e.getMessage();
+            return LocalDate.now();
+        }
     }
 
     private boolean checkList(List<String> stringList) {

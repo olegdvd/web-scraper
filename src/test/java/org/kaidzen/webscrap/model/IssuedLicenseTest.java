@@ -14,7 +14,7 @@ public class IssuedLicenseTest {
     private static final Integer ID = 2013052487;
     private static final String TYPE = "Type info";
     private static final String LICENSE = "2013021917";
-    private static final Integer EDRPO = 40013303;
+    private static final Long EDRPO = 40013303L;
     private static final String THE_LICENSEE = "Roga LTD";
     private static final String ADDRESS = "City, str. office #5";
     private static final LocalDate ISSUE_DATE = LocalDate.parse("2018-06-15");
@@ -54,6 +54,7 @@ public class IssuedLicenseTest {
         System.out.println(issuedLicense);
         System.out.println(expectedTimestamp);
         System.out.println(issuedLicense.getMd5Value());
+        System.out.println(issuedLicense.toCsv());
     }
 
 }
