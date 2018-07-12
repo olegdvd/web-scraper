@@ -38,7 +38,7 @@ public class ElementsToIssuedLicenseMapper implements Function<Element, Optional
                     .id(Integer.valueOf(getText(0)))
                     .type(getText(1))
                     .license(getText(2))
-                    .edrpo(getEdrpoOrZero(3))
+                    .edrpo(getEdrpoOrMock(3))
                     .theLicensee(getText(4))
                     .address(getText(5))
                     .issueDate(getDateOrNow(6))
@@ -46,18 +46,18 @@ public class ElementsToIssuedLicenseMapper implements Function<Element, Optional
                     .timestamp()
                     .build());
         }
-        //TODO Add Dao with mapped columns;
+        /* TODO Add Dao with mapped columns; */
         LOG.warn("Skipped  scrapped element");
         return Optional.empty();
 
     }
 
-    private Long getEdrpoOrZero(int i) {
+    private Long getEdrpoOrMock(int i) {
         try {
             return Long.valueOf(getText(i).trim());
         } catch (NumberFormatException e) {
             LOG.warn("EDRPO mapped to zero with id:{}", getText(0), e.getMessage());
-            return Long.valueOf("0");
+            return Long.valueOf("11111111");
         }
     }
 

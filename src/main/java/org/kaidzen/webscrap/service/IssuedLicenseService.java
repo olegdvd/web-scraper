@@ -1,11 +1,10 @@
 package org.kaidzen.webscrap.service;
 
+import org.kaidzen.webscrap.dao.IssuedLicenseDao;
 import org.kaidzen.webscrap.model.IssuedLicense;
-import org.kaidzen.webscrap.repository.IssuedLicenseRepository;
 import org.kaidzen.webscrap.util.WriteBulkToFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -15,23 +14,23 @@ import java.util.List;
 public class IssuedLicenseService implements IssuedService {
 
     private static final Logger LOG = LoggerFactory.getLogger(IssuedLicenseService.class);
+    private final IssuedLicenseDao issuedLicenseDao;
 
-    @Autowired
-    private IssuedLicenseRepository licenseRepository;
     private final WriteBulkToFile bulkToFile;
 
-    public IssuedLicenseService() {
+    public IssuedLicenseService(IssuedLicenseDao issuedLicenseDao) {
+        this.issuedLicenseDao = issuedLicenseDao;
         bulkToFile = new WriteBulkToFile();
     }
 
     @Override
     public void saveLicense(IssuedLicense license) {
-        licenseRepository.save(license);
+        issuedLicenseDao.addLicense(license);
     }
 
     @Override
     public void saveAll(Collection<IssuedLicense> licenses) {
-        licenseRepository.save(licenses);
+        issuedLicenseDao.save(licenses);
         LOG.info("Saved to base rows: {}", licenses.size());
     }
 
