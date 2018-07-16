@@ -50,7 +50,7 @@ public class ConfigWebScrapConfiguration {
     }
 
     @Bean
-    public Function<Collection<IssuedLicense>, List<String>> objToCsvMapper(){
+    public Function<Collection<IssuedLicense>, List<String>> objToCsvMapper() {
         return new ObjectToCsvMapper();
     }
 
@@ -75,7 +75,7 @@ public class ConfigWebScrapConfiguration {
     }
 
     @Bean
-    public JdbcTemplate jdbcTemplate(){
+    public JdbcTemplate jdbcTemplate() {
         return new JdbcTemplate(dataSourceLocal());
     }
 }

@@ -29,19 +29,19 @@ public class MapperUtil {
 
     public static Long getEdrpoOrMock(Long edrpo) {
         try {
-            return Long.valueOf(edrpo);
+            return edrpo;
         } catch (NumberFormatException e) {
-            LOG.warn("EDRPO mapped to 11111111", e.getMessage());
+            LOG.warn("EDRPO mapped to 11111111", e);
             return Long.valueOf("11111111");
         }
     }
 
     public static LocalDate getDateOrNow(Date date) {
         try {
-            return LocalDate.parse("1990-01-01");
+            return LocalDate.parse(date.toLocalDate().toString());
         } catch (DateTimeParseException e) {
             LOG.warn("Date mapped to \"1990-01-01\"", e.getMessage());
-            return LocalDate.now();
+            return LocalDate.parse("1990-0101");
         }
     }
 }

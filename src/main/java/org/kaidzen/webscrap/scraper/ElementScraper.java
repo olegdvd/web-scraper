@@ -43,7 +43,7 @@ public abstract class ElementScraper<T> {
         throw new RuntimeException("Failed to parse url: " + fullUrl);
     }
 
-    protected String getFullUrl(String pagedUrl, int pageIndex) {
+    private String getFullUrl(String pagedUrl, int pageIndex) {
         return String.format(pagedUrl, pageIndex);
     }
 }

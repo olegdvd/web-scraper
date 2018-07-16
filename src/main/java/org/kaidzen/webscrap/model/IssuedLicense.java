@@ -26,8 +26,8 @@ public class IssuedLicense {
     private String type;
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private String license;
-    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-    private Long edrpo;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    private String edrpo;
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private String theLicensee;
     @JsonFormat(shape = JsonFormat.Shape.STRING)
@@ -130,7 +130,7 @@ public class IssuedLicense {
         return license;
     }
 
-    public Long getEdrpo() {
+    public String getEdrpo() {
         return edrpo;
     }
 
@@ -163,7 +163,7 @@ public class IssuedLicense {
         private Integer id;
         private String type;
         private String license;
-        private Long edrpo;
+        private String edrpo;
         private String theLicensee;
         private String address;
         private LocalDate issueDate;
@@ -189,7 +189,7 @@ public class IssuedLicense {
             return this;
         }
 
-        public Builder edrpo(Long edrpo) {
+        public Builder edrpo(String edrpo) {
             this.edrpo = edrpo;
             return this;
         }

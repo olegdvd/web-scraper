@@ -73,7 +73,7 @@ public class IssuedLicenseDao implements GeneralDao<IssuedLicense> {
                 ps.setInt(1, license.getLicenseId());
                 ps.setString(2, license.getType());
                 ps.setString(3, license.getLicense());
-                ps.setLong(4, license.getEdrpo());
+                ps.setString(4, license.getEdrpo());
                 ps.setString(5, license.getTheLicensee());
                 ps.setString(6, license.getAddress());
                 ps.setObject(7, license.getIssueDate());
@@ -114,7 +114,7 @@ public class IssuedLicenseDao implements GeneralDao<IssuedLicense> {
                     .id(rs.getInt("licenseId"))
                     .type(rs.getString("type"))
                     .license(rs.getString("license"))
-                    .edrpo(rs.getLong("edrpo"))
+                    .edrpo(rs.getString("edrpo"))
                     .theLicensee(rs.getString("theLicensee"))
                     .address(rs.getString("address"))
                     .issueDate(MapperUtil.getDateOrNow(rs.getDate("issueDate")))
