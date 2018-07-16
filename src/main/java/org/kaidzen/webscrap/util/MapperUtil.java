@@ -38,9 +38,9 @@ public class MapperUtil {
 
     public static LocalDate getDateOrNow(Date date) {
         try {
-            return LocalDate.parse(date.toLocalDate().toString());
+            return LocalDate.parse("1990-01-01");
         } catch (DateTimeParseException e) {
-            LOG.warn("Date mapped to now()", e.getMessage());
+            LOG.warn("Date mapped to \"1990-01-01\"", e.getMessage());
             return LocalDate.now();
         }
     }

@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -29,20 +28,18 @@ public class IssuedLicenseService implements IssuedService {
     }
 
     @Override
-    public void saveAll(Collection<IssuedLicense> licenses) {
-        issuedLicenseDao.save(licenses);
+    public void saveAll(List<IssuedLicense> licenses){
+        issuedLicenseDao.addAllLicenses(licenses);
         LOG.info("Saved to base rows: {}", licenses.size());
     }
 
     @Override
     public List<IssuedLicense> findAllLicenses() {
-        return licenseRepository.findAll();
+        return issuedLicenseDao.getAllLicensees();
     }
 
     @Override
     public void saveToFile(String fileName, List<String> licenses) {
         bulkToFile.writeToFile(fileName, licenses);
     }
-
-
 }

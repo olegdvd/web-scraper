@@ -46,14 +46,14 @@ public class IssuedLicenseTest {
 
     @Test
     public void testBuilder(){
-        String md5 = issuedLicense.getMd5Value();
+        String md5 = issuedLicense.getMd5();
         Timestamp timestamp = issuedLicense.getTimestamp();
 
         assertEquals(EXP_MD5, md5);
         assertEquals(expectedTimestamp, timestamp);
         System.out.println(issuedLicense);
         System.out.println(expectedTimestamp);
-        System.out.println(issuedLicense.getMd5Value());
+        System.out.println(issuedLicense.getMd5());
         System.out.println(issuedLicense.toCsv());
     }
 

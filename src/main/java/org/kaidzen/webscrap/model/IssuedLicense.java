@@ -39,7 +39,7 @@ public class IssuedLicense {
     @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     private Timestamp timestamp;
     @JsonFormat(shape = JsonFormat.Shape.STRING)
-    private String md5Value;
+    private String md5;
 
     IssuedLicense(Builder builder) {
         this.licenseId = builder.id;
@@ -51,7 +51,7 @@ public class IssuedLicense {
         this.issueDate = builder.issueDate;
         this.validToDate = builder.validToDate;
         this.timestamp = builder.timestamp;
-        this.md5Value = Md5Calculator.calculateMd5(
+        this.md5 = Md5Calculator.calculateMd5(
                 licenseId.toString(),
                 type,
                 license,
@@ -74,7 +74,7 @@ public class IssuedLicense {
                 .append("issueDate", issueDate)
                 .append("validToDate", validToDate)
                 .append("timestamp", timestamp)
-                .append("md5Value", md5Value)
+                .append("md5", md5)
                 .build();
     }
 
@@ -88,7 +88,7 @@ public class IssuedLicense {
                 issueDate.toString(),
                 validToDate.toString(),
                 timestamp.toString(),
-                md5Value);
+                md5);
     }
 
     @Override
@@ -102,7 +102,7 @@ public class IssuedLicense {
                 .append(this.edrpo, generic.edrpo)
                 .append(this.issueDate, generic.issueDate)
                 .append(this.validToDate, generic.validToDate)
-                .append(this.md5Value, generic.md5Value)
+                .append(this.md5, generic.md5)
                 .isEquals();
     }
 
@@ -114,7 +114,7 @@ public class IssuedLicense {
                 .append(edrpo)
                 .append(issueDate)
                 .append(validToDate)
-                .append(md5Value)
+                .append(md5)
                 .build();
     }
 
@@ -154,8 +154,8 @@ public class IssuedLicense {
         return this.timestamp;
     }
 
-    public String getMd5Value() {
-        return md5Value;
+    public String getMd5() {
+        return md5;
     }
 
     public static class Builder {
