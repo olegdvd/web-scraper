@@ -1,11 +1,13 @@
 package org.kaidzen.webscrap.spring;
 
 import org.jsoup.nodes.Element;
+import org.kaidzen.webscrap.dao.IssuedLicenseDao;
 import org.kaidzen.webscrap.mapper.ElementsToIssuedLicenseMapper;
 import org.kaidzen.webscrap.mapper.ObjectToCsvMapper;
 import org.kaidzen.webscrap.model.IssuedLicense;
 import org.kaidzen.webscrap.scraper.ElementsIssueLicenses;
 import org.kaidzen.webscrap.scraper.IssuedLicenseScraper;
+import org.kaidzen.webscrap.service.IssuedLicenseService;
 import org.kaidzen.webscrap.util.StandardTimeClock;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -60,8 +62,18 @@ public class ConfigWebScrapConfiguration {
     }
 
     @Bean
+    public IssuedLicenseService issuedLicenseService(){
+        return new IssuedLicenseService(issuedLiceseDao());
+    }
+
+    @Bean
+    public IssuedLicenseDao issuedLiceseDao() {
+        return new IssuedLicenseDao(jdbcTemplate(), clock());
+    }
+
+    @Bean
     public IssuedLicenseScraper issuedLicenseScraper() {
-        return new IssuedLicenseScraper(issuedLicenseUrl, elementsIssueLicenses());
+        return new IssuedLicenseScraper(issuedLicenseUrl, elementsIssueLicenses(), issuedLicenseService());
     }
 
     @Bean

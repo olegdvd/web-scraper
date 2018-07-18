@@ -3,6 +3,7 @@ package org.kaidzen.webscrap.scraper;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.Response;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
@@ -12,11 +13,15 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 public abstract class ElementScraper<T> {
 
     private static final Logger LOG = LoggerFactory.getLogger(ElementScraper.class);
-    private static final OkHttpClient CLIENT = new OkHttpClient();
+    private static final OkHttpClient CLIENT = new OkHttpClient.Builder()
+            .retryOnConnectionFailure(true)
+            .connectTimeout(15, TimeUnit.SECONDS)
+            .build();
 
     ElementScraper() {
     }
@@ -32,7 +37,9 @@ public abstract class ElementScraper<T> {
             Request request = new Request.Builder().url(url.get()).get().build();
             String html = null;
             try {
-                html = Objects.requireNonNull(CLIENT.newCall(request).execute().body()).string();
+                Response response = CLIENT.newCall(request).execute();
+                LOG.info("Response from [{}] with: {}", fullUrl, response.code());
+                html = Objects.requireNonNull(response.body()).string();
             } catch (IOException e) {
                 LOG.error("Source server is unreachable or changed/wrong URL: {}", fullUrl);
             }

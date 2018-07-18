@@ -37,7 +37,7 @@ public class ElementsToIssuedLicenseMapper implements Function<Element, Optional
             return Optional.ofNullable(new IssuedLicense.Builder(clock)
                     .id(Integer.valueOf(getText(0)))
                     .type(getText(1))
-                    .license(getText(2))
+                    .license(stripToFieldLenght(getText(2)))
                     .edrpo(getText(3))
                     .theLicensee(getText(4))
                     .address(getText(5))
@@ -47,18 +47,13 @@ public class ElementsToIssuedLicenseMapper implements Function<Element, Optional
                     .build());
         }
         /* TODO Add Dao with mapped columns; */
-        LOG.warn("Skipped  scrapped element");
+        LOG.info("Skipped  scrapped element");
         return Optional.empty();
 
     }
 
-    private Long getEdrpoOrMock(int i) {
-        try {
-            return Long.valueOf(getText(i).trim());
-        } catch (NumberFormatException e) {
-            LOG.warn("EDRPO mapped to zero with id:{}", getText(0), e);
-            return Long.valueOf("11111111");
-        }
+    private String stripToFieldLenght(String text) {
+        return text.length()>40 ? text.substring(0, 39) : text;
     }
 
     private LocalDate getDateOrNow(int i) {
@@ -75,7 +70,7 @@ public class ElementsToIssuedLicenseMapper implements Function<Element, Optional
         if (stringList.size() != FIELDS_TO_MAP) return false;
         if (StringUtils.isNumericSpace(first)) return false;
         if (StringUtils.isEmpty(first)) return false;
-        return !"№ ".equals(first);
+        return !first.contains("№");
     }
 
     private String getText(int index) {

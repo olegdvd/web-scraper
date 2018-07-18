@@ -5,7 +5,6 @@ import org.kaidzen.webscrap.model.IssuedLicense;
 import org.kaidzen.webscrap.service.IssuedLicenseService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
@@ -21,18 +20,20 @@ public class IssuedLicenseScraper {
     private final Function<Collection<IssuedLicense>, List<String>> objToCsvMapper;
     private final ElementsIssueLicenses elementsIssueLicenses;
     private final String baseUrl;
-    @Autowired
-    private IssuedLicenseService licenseService;
+    private final IssuedLicenseService licenseService;
 
-    public IssuedLicenseScraper(String baseUrl, ElementsIssueLicenses elementsIssueLicenses) {
+    public IssuedLicenseScraper(String baseUrl,
+                                ElementsIssueLicenses elementsIssueLicenses,
+                                IssuedLicenseService issuedLicenseService) {
         this.baseUrl = baseUrl;
         this.elementsIssueLicenses = elementsIssueLicenses;
+        this.licenseService = issuedLicenseService;
         objToCsvMapper = new ObjectToCsvMapper();
     }
 
     public void scrap() {
         scrapedStream()
-                .forEach(issuedLicenses -> licenseService.saveAll(issuedLicenses));
+                .forEach(licenseService::saveAll);
     }
 
     public void scrapToCsv(String fileName) {
@@ -43,9 +44,9 @@ public class IssuedLicenseScraper {
 
     private Stream<List<IssuedLicense>> scrapedStream() {
 //        int lastPageNumber = elementsIssueLicenses.pagesToScrap(baseUrl);
-        int lastPageNumber = 1861;
+        int lastPageNumber = 1869;
         LOG.info("There is [{}] pages to scrap", lastPageNumber);
-        return IntStream.rangeClosed(1, lastPageNumber).boxed()
+        return IntStream.rangeClosed(1121, lastPageNumber).boxed()
                 .map(integer -> elementsIssueLicenses.documentForPage(baseUrl, integer))
                 .map(document -> elementsIssueLicenses.takeElements("tr", document));
     }

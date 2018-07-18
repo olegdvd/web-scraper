@@ -18,7 +18,7 @@ import java.util.List;
 @Repository
 public class IssuedLicenseDao implements GeneralDao<IssuedLicense> {
 
-    private static final String TABLE = " issuedLicenses";
+    private static final String TABLE = " issuedLicenses_md";
     private static final String SELECT = "SELECT ";
     private static final String INSERT = "INSERT INTO " + TABLE;
     private static final String DELETE = "DELETE ";
