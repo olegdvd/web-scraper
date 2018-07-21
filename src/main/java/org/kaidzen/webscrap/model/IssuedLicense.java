@@ -7,19 +7,11 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.kaidzen.webscrap.util.Md5Calculator;
 import org.kaidzen.webscrap.util.StandardTimeClock;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 
-@Entity
-@Table(name = "issuedLicenses")
 public class IssuedLicense {
 
-    @Id
-    @Column(name = "licenseId")
     @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     private Integer licenseId;
     @JsonFormat(shape = JsonFormat.Shape.STRING)
