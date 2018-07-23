@@ -2,8 +2,8 @@ package org.kaidzen.webscrap.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ClassPathResource;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -16,16 +16,21 @@ public class WriteBulkToFile {
 
     private static final Logger LOG = LoggerFactory.getLogger(WriteBulkToFile.class);
 
-    public void writeToFile(String fileName, List<String> stringsList){
+    public Path writeToFile(String fileName, List<String> stringsList) {
+
+        Path res;
         try {
-            ClassPathResource resource = new ClassPathResource(fileName);
-            Path filePath = Paths.get(resource.getPath());
-            Path path = Paths.get(new ClassPathResource(fileName).getURI());
-            System.out.println(path);
-            Path res = Files.write(filePath, stringsList, Charset.forName("UTF-8"), StandardOpenOption.APPEND, StandardOpenOption.WRITE);
+            Path filePath = Paths.get(fileName);
+            File file = new File(filePath.toString());
+            //TODO if exist - create new file, to save old one
+            if (file.exists()) Files.delete(filePath);
+            Path resultPath = Files.createFile(filePath);
+            res = Files.write(resultPath, stringsList, Charset.forName("UTF-8"), StandardOpenOption.APPEND, StandardOpenOption.WRITE);
             LOG.info("Added to file: {}, {} lines", res, stringsList.size());
+            return res;
         } catch (IOException e) {
             LOG.warn("Can not get path to file: {}", fileName, e);
+            return Paths.get("");
         }
     }
 

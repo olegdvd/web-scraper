@@ -47,7 +47,7 @@ public class IssuedLicense {
                 licenseId.toString(),
                 type,
                 license,
-                edrpo.toString(),
+                edrpo,
                 theLicensee,
                 address,
                 issueDate.toString(),

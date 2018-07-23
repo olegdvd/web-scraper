@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.Path;
 import java.util.List;
 
 @Service
@@ -14,7 +15,6 @@ public class IssuedLicenseService implements IssuedService {
 
     private static final Logger LOG = LoggerFactory.getLogger(IssuedLicenseService.class);
     private final IssuedLicenseDao issuedLicenseDao;
-
     private final WriteBulkToFile bulkToFile;
 
     public IssuedLicenseService(IssuedLicenseDao issuedLicenseDao) {
@@ -39,7 +39,7 @@ public class IssuedLicenseService implements IssuedService {
     }
 
     @Override
-    public void saveToFile(String fileName, List<String> licenses) {
-        bulkToFile.writeToFile(fileName, licenses);
+    public Path saveToFile(String fileName, List<String> licenses) {
+        return bulkToFile.writeToFile(fileName, licenses);
     }
 }

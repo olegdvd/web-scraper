@@ -3,6 +3,7 @@ package org.kaidzen.webscrap.dao;
 import org.kaidzen.webscrap.model.IssuedLicense;
 import org.kaidzen.webscrap.util.MapperUtil;
 import org.kaidzen.webscrap.util.StandardTimeClock;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -64,27 +65,30 @@ public class IssuedLicenseDao implements GeneralDao<IssuedLicense> {
     @Override
     public void addAllLicenses(List<IssuedLicense> licenses) {
         String sql = INSERT + " (" + COLUMN_STR + ")" + VALUES;
-        jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
-            @Override
-            public void setValues(PreparedStatement ps, int i) throws SQLException {
-                IssuedLicense license = licenses.get(i);
-                ps.setInt(1, license.getLicenseId());
-                ps.setString(2, license.getType());
-                ps.setString(3, license.getLicense());
-                ps.setString(4, license.getEdrpo());
-                ps.setString(5, license.getTheLicensee());
-                ps.setString(6, license.getAddress());
-                ps.setObject(7, license.getIssueDate());
-                ps.setObject(8, license.getValidToDate());
-                ps.setObject(9, license.getTimestamp());
-                ps.setString(10, license.getMd5());
-            }
-
-            @Override
-            public int getBatchSize() {
-                return licenses.size();
-            }
-        });
+        try {
+            jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+                @Override
+                public void setValues(PreparedStatement ps, int i) throws SQLException {
+                    IssuedLicense license = licenses.get(i);
+                    ps.setInt(1, license.getLicenseId());
+                    ps.setString(2, license.getType());
+                    ps.setString(3, license.getLicense());
+                    ps.setString(4, license.getEdrpo());
+                    ps.setString(5, license.getTheLicensee());
+                    ps.setString(6, license.getAddress());
+                    ps.setObject(7, license.getIssueDate());
+                    ps.setObject(8, license.getValidToDate());
+                    ps.setObject(9, license.getTimestamp());
+                    ps.setString(10, license.getMd5());
+                }
+                @Override
+                public int getBatchSize() {
+                    return licenses.size();
+                }
+            });
+        } catch (DuplicateKeyException e){
+            System.out.println("Let's check by line...");
+        }
     }
 
     @Override
@@ -101,8 +105,8 @@ public class IssuedLicenseDao implements GeneralDao<IssuedLicense> {
     @Override
     public boolean isLicenseIdExists(Integer licenseId) {
         String sql = SELECT + "COUNT(*)" + FROM + WHERE;
-        Integer licenseIds = jdbcTemplate.queryForObject(sql, Integer.class, licenseId);
-        return licenseIds >= 0;
+        Integer countLicenseId = jdbcTemplate.queryForObject(sql, Integer.class, licenseId);
+        return countLicenseId >= 0;
     }
 
     class IssuedLicenseRowMapper implements RowMapper<IssuedLicense> {
@@ -115,8 +119,8 @@ public class IssuedLicenseDao implements GeneralDao<IssuedLicense> {
                     .edrpo(rs.getString("edrpo"))
                     .theLicensee(rs.getString("theLicensee"))
                     .address(rs.getString("address"))
-                    .issueDate(MapperUtil.getDateOrNow(rs.getDate("issueDate")))
-                    .validToDate(MapperUtil.getDateOrNow(rs.getDate("validToDate")))
+                    .issueDate(MapperUtil.getDateOrMax(rs.getDate("issueDate")))
+                    .validToDate(MapperUtil.getDateOrMax(rs.getDate("validToDate")))
                     .timestamp()
                     .build();
         }
