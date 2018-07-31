@@ -28,8 +28,12 @@ public class MapperUtil {
     }
 
     public static LocalDate getDateOrMax(Date date) {
+            return MapperUtil.getDateOrMax(date.toLocalDate().toString());
+    }
+
+    public static LocalDate getDateOrMax(String date) {
         try {
-            return LocalDate.parse(date.toLocalDate().toString());
+            return LocalDate.parse(date);
         } catch (DateTimeParseException e) {
             LOG.warn("Date mapped to \"2038-01-01\"", e.getMessage());
             return LocalDate.parse("2038-01-01");

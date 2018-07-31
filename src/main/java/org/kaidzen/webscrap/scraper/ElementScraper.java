@@ -43,7 +43,6 @@ public abstract class ElementScraper<T> {
             } catch (IOException e) {
                 LOG.error("Source server is unreachable or changed/wrong URL: {}", fullUrl);
             }
-
             return Jsoup.parse(html);
         }
         LOG.warn("Failed to scrap from URL: {}", fullUrl);

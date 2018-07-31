@@ -29,8 +29,8 @@ public class IssuedLicenseService implements IssuedService {
 
     @Override
     public void saveAll(List<IssuedLicense> licenses){
-        issuedLicenseDao.addAllLicenses(licenses);
-        LOG.info("Saved to base rows: {}", licenses.size());
+        int wasSaved = issuedLicenseDao.addAllLicenses(licenses);
+        LOG.info("Saved to base rows: {}", wasSaved);
     }
 
     @Override

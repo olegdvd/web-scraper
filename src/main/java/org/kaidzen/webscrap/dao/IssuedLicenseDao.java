@@ -3,6 +3,8 @@ package org.kaidzen.webscrap.dao;
 import org.kaidzen.webscrap.model.IssuedLicense;
 import org.kaidzen.webscrap.util.MapperUtil;
 import org.kaidzen.webscrap.util.StandardTimeClock;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -13,9 +15,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Predicate;
+
+import static java.util.stream.Collectors.*;
 
 @Repository
 public class IssuedLicenseDao implements GeneralDao<IssuedLicense> {
+
+    private static final Logger LOG = LoggerFactory.getLogger(IssuedLicenseDao.class);
 
     private static final String TABLE = " issuedLicenses_md";
     private static final String SELECT = "SELECT ";
@@ -24,6 +32,7 @@ public class IssuedLicenseDao implements GeneralDao<IssuedLicense> {
     private static final String VALUES = " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String FROM = " FROM" + TABLE;
     private static final String WHERE = " WHERE licenseId=?";
+    private static final String WHERE_IDS = " WHERE licenseId IN ";
     private static final String COLUMN_STR =
             "licenseId, type, license, edrpo, theLicensee, address, issueDate, validToDate, timestamp, md5";
     private final JdbcTemplate jdbcTemplate;
@@ -63,7 +72,7 @@ public class IssuedLicenseDao implements GeneralDao<IssuedLicense> {
     }
 
     @Override
-    public void addAllLicenses(List<IssuedLicense> licenses) {
+    public int addAllLicenses(List<IssuedLicense> licenses) {
         String sql = INSERT + " (" + COLUMN_STR + ")" + VALUES;
         try {
             jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
@@ -81,14 +90,38 @@ public class IssuedLicenseDao implements GeneralDao<IssuedLicense> {
                     ps.setObject(9, license.getTimestamp());
                     ps.setString(10, license.getMd5());
                 }
+
                 @Override
                 public int getBatchSize() {
                     return licenses.size();
                 }
             });
-        } catch (DuplicateKeyException e){
-            System.out.println("Let's check by line...");
+            return licenses.size();
+        } catch (DuplicateKeyException e) {
+            LOG.info("Found duplicates in base, start to check one by one...");
+            this.addAllNonDuplicatedLicenses(licenses);
         }
+        return 0;
+    }
+
+    @Override
+    public void addAllNonDuplicatedLicenses(List<IssuedLicense> licenses) {
+        String iDs = licenses.stream()
+                .map(license -> license.getLicenseId().toString())
+                .collect(joining(", "));
+        String sql = SELECT + COLUMN_STR + FROM + WHERE_IDS + String.format("(%s)", iDs);
+        List<IssuedLicense> presentLicenses = jdbcTemplate.query(sql, new IssuedLicenseRowMapper());
+        Map<Integer, String> currentLicensesPair = presentLicenses.stream()
+                .collect(toMap(IssuedLicense::getLicenseId, IssuedLicense::getMd5));
+        List<IssuedLicense> unsavedLicenses = licenses.stream()
+                .filter(getIssuedLicensePredicate(currentLicensesPair))
+                .filter(license -> !currentLicensesPair.containsValue(license.getMd5()))
+                .collect(toList());
+        if (!unsavedLicenses.isEmpty()) addAllLicenses(unsavedLicenses);
+    }
+
+    private Predicate<IssuedLicense> getIssuedLicensePredicate(Map<Integer, String> presentLicensesIds) {
+        return license -> presentLicensesIds.containsKey(license.getLicenseId());
     }
 
     @Override

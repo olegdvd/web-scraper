@@ -46,7 +46,7 @@ public class IssuedLicenseScraper {
 //        int lastPageNumber = elementsIssueLicenses.pagesToScrap(baseUrl);
         int lastPageNumber = 1869;
         LOG.info("There is [{}] pages to scrap", lastPageNumber);
-        return IntStream.rangeClosed(1, lastPageNumber).boxed()
+        return IntStream.rangeClosed(1800, 1872).boxed()
                 .map(integer -> elementsIssueLicenses.documentForPage(baseUrl, integer))
                 .map(document -> elementsIssueLicenses.takeElements("tr", document));
     }

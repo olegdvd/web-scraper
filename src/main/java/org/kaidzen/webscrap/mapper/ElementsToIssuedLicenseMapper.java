@@ -4,12 +4,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.kaidzen.webscrap.model.IssuedLicense;
+import org.kaidzen.webscrap.util.MapperUtil;
 import org.kaidzen.webscrap.util.StandardTimeClock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -57,12 +57,7 @@ public class ElementsToIssuedLicenseMapper implements Function<Element, Optional
     }
 
     private LocalDate getDateOrNow(int i) {
-        try {
-            return LocalDate.parse(getText(i));
-        } catch (DateTimeParseException e) {
-            LOG.warn("Date mapped to now() with id:{}", getText(0), e);
-            return LocalDate.now();
-        }
+            return MapperUtil.getDateOrMax(getText(i));
     }
 
     private boolean checkList(List<String> stringList) {
