@@ -25,7 +25,7 @@ public class IssuedLicenseDao implements GeneralDao<IssuedLicense> {
 
     private static final Logger LOG = LoggerFactory.getLogger(IssuedLicenseDao.class);
 
-    private static final String TABLE = " issuedLicenses_md";
+    private static final String TABLE = " issuedLicenses_aug";
     private static final String SELECT = "SELECT ";
     private static final String INSERT = "INSERT INTO " + TABLE;
     private static final String DELETE = "DELETE ";
@@ -121,7 +121,7 @@ public class IssuedLicenseDao implements GeneralDao<IssuedLicense> {
     }
 
     private Predicate<IssuedLicense> getIssuedLicensePredicate(Map<Integer, String> presentLicensesIds) {
-        return license -> presentLicensesIds.containsKey(license.getLicenseId());
+        return license -> !presentLicensesIds.containsKey(license.getLicenseId());
     }
 
     @Override

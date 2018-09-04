@@ -7,6 +7,8 @@ import org.kaidzen.webscrap.mapper.ObjectToCsvMapper;
 import org.kaidzen.webscrap.model.IssuedLicense;
 import org.kaidzen.webscrap.scraper.ElementsIssueLicenses;
 import org.kaidzen.webscrap.scraper.IssuedLicenseScraper;
+import org.kaidzen.webscrap.scraper.PermitDocumentScraper;
+import org.kaidzen.webscrap.scraper.PermitsScrapper;
 import org.kaidzen.webscrap.service.IssuedLicenseService;
 import org.kaidzen.webscrap.util.StandardTimeClock;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,6 +30,9 @@ public class ConfigWebScrapConfiguration {
 
     @Value("${web.issuedLicenseUrl}")
     private String issuedLicenseUrl;
+
+    @Value("${web.permitsUrl}")
+    private String permitsUrl;
 
     @Value("${datasource.url}")
     private String url;
@@ -74,6 +79,16 @@ public class ConfigWebScrapConfiguration {
     @Bean
     public IssuedLicenseScraper issuedLicenseScraper() {
         return new IssuedLicenseScraper(issuedLicenseUrl, elementsIssueLicenses(), issuedLicenseService());
+    }
+
+    @Bean
+    public PermitDocumentScraper permitDocumentScraper(){
+        return new PermitDocumentScraper();
+    }
+
+    @Bean
+    public PermitsScrapper permitsScrapper(){
+        return new PermitsScrapper(permitsUrl, permitDocumentScraper());
     }
 
     @Bean

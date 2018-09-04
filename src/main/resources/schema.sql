@@ -1,6 +1,6 @@
 # DROP TABLE IF EXISTS issuedLicenses;
 
-CREATE TABLE IF NOT EXISTS issuedLicenses_md (
+CREATE TABLE IF NOT EXISTS issuedLicenses_aug (
 
   licenseId   INT          NOT NULL,
   type        VARCHAR(100) NOT NULL,
