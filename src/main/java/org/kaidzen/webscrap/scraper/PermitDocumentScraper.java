@@ -3,6 +3,7 @@ package org.kaidzen.webscrap.scraper;
 import okhttp3.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.kaidzen.webscrap.model.FormFilterData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,7 +15,6 @@ import java.util.concurrent.TimeUnit;
 public class PermitDocumentScraper {
 
     private static final Logger LOG = LoggerFactory.getLogger(ElementScraper.class);
-    private static final MediaType JSON = MediaType.parse("application/x-www-form-urlencoded; charset=utf-8");
     private static final OkHttpClient CLIENT = new OkHttpClient.Builder()
             .retryOnConnectionFailure(true)
             .connectTimeout(15, TimeUnit.SECONDS)
@@ -23,14 +23,14 @@ public class PermitDocumentScraper {
     public PermitDocumentScraper() {
     }
 
-    protected Document getDocument(String url, String jsonString){
+    protected Document getDocument(String url, FormFilterData filterData){
         Optional<HttpUrl> targetUrl = Optional.ofNullable(HttpUrl.parse(url));
         if (targetUrl.isPresent()){
             RequestBody formBody = new MultipartBody.Builder()
                     .setType(MultipartBody.FORM)
-                    .addFormDataPart("filter[date]", "2016")
-                    .addFormDataPart("filter[date2]", "04")
-                    .addFormDataPart("filter[regob]", "12")
+                    .addFormDataPart("filter[date]", filterData.getYear())
+                    .addFormDataPart("filter[date2]", filterData.getMonth())
+                    .addFormDataPart("filter[regob]", filterData.getRegion())
                     .build();
             Request request = new Request.Builder()
                     .url(targetUrl.get())
@@ -42,7 +42,7 @@ public class PermitDocumentScraper {
                 LOG.info("Response from [{}] with: {}", url, response.code());
                 html = Objects.requireNonNull(response.body()).string();
             } catch (IOException e) {
-                LOG.error("Source server is unreachable or changed/wrong URL: {} with parameters: {}", url, jsonString);
+                LOG.error("Source server is unreachable or changed/wrong URL: {} with parameters: {}", url, filterData);
             }
             return Jsoup.parse(html);
         }

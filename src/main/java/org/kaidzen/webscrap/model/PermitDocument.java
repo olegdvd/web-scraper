@@ -1,5 +1,7 @@
 package org.kaidzen.webscrap.model;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.kaidzen.webscrap.util.Md5Calculator;
 import org.kaidzen.webscrap.util.StandardTimeClock;
@@ -56,20 +58,73 @@ public class PermitDocument {
         );
     }
 
+    public String toCsv() {
+        return String.join(", ",
+                documentId,
+                region,
+                documentType,
+                subject,
+                Short.toString(category),
+                customer,
+                techSupervision,
+                designer,
+                supervision,
+                contractor,
+                landInfo,
+                Short.toString(month),
+                Short.toString(year),
+                timestamp.toString(),
+                md5);
+    }
+
     @Override
     public int hashCode() {
-        return super.hashCode();
+        return new HashCodeBuilder()
+                .append(documentId)
+                .append(region)
+                .append(documentType)
+                .append(subject)
+                .append(category)
+                .append(customer)
+                .append(techSupervision)
+                .append(designer)
+                .append(supervision)
+                .append(contractor)
+                .append(landInfo)
+                .append(month)
+                .append(year)
+                .append(timestamp)
+                .append(md5)
+                .build();
     }
 
     @Override
     public boolean equals(Object obj) {
-        return super.equals(obj);
+        if (this == obj) return true;
+        if (!(obj instanceof PermitDocument)) return false;
+        PermitDocument other = (PermitDocument) obj;
+        return new EqualsBuilder()
+                .append(this.documentId, other.documentId)
+                .append(this.region, other.region)
+                .append(this.documentType, other.documentType)
+                .append(this.subject, other.subject)
+                .append(this.category, other.category)
+                .append(this.customer, other.customer)
+                .append(this.techSupervision, other.techSupervision)
+                .append(this.designer, other.designer)
+                .append(this.supervision, other.supervision)
+                .append(this.contractor, other.contractor)
+                .append(this.landInfo, other.landInfo)
+                .append(this.month, other.month)
+                .append(this.year, other.year)
+                .append(this.md5, other.md5)
+                .build();
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(PermitDocument.class)
-        .append(documentId)
+                .append(documentId)
                 .append(region)
                 .append(documentType)
                 .append(subject)
@@ -82,6 +137,8 @@ public class PermitDocument {
                 .append(landInfo)
                 .append(Short.toString(month))
                 .append(Short.toString(year))
+                .append(timestamp)
+                .append(md5)
                 .build();
     }
 
