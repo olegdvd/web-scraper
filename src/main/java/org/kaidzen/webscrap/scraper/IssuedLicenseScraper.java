@@ -1,6 +1,6 @@
 package org.kaidzen.webscrap.scraper;
 
-import org.kaidzen.webscrap.mapper.ObjectToCsvMapper;
+import org.kaidzen.webscrap.mapper.IssuedLicenseToCsvMapper;
 import org.kaidzen.webscrap.model.IssuedLicense;
 import org.kaidzen.webscrap.service.IssuedLicenseService;
 import org.slf4j.Logger;
@@ -28,7 +28,7 @@ public class IssuedLicenseScraper {
         this.baseUrl = baseUrl;
         this.elementsIssueLicenses = elementsIssueLicenses;
         this.licenseService = issuedLicenseService;
-        objToCsvMapper = new ObjectToCsvMapper();
+        objToCsvMapper = new IssuedLicenseToCsvMapper();
     }
 
     public void scrap() {
@@ -47,7 +47,7 @@ public class IssuedLicenseScraper {
         int lastPageNumber = 1879;
         LOG.info("There is [{}] pages to scrap", lastPageNumber);
         return IntStream.rangeClosed(1, 1879).boxed()
-                .map(integer -> elementsIssueLicenses.documentForPage(baseUrl, integer))
+                .map(integer -> elementsIssueLicenses.getPagetoDocument(baseUrl, integer))
                 .map(document -> elementsIssueLicenses.takeElements("tr", document));
     }
 }

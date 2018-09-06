@@ -3,13 +3,14 @@ package org.kaidzen.webscrap.spring;
 import org.jsoup.nodes.Element;
 import org.kaidzen.webscrap.dao.IssuedLicenseDao;
 import org.kaidzen.webscrap.mapper.ElementsToIssuedLicenseMapper;
-import org.kaidzen.webscrap.mapper.ObjectToCsvMapper;
+import org.kaidzen.webscrap.mapper.ElementsToPermitDocumentMapper;
+import org.kaidzen.webscrap.mapper.PermitDocumentToCsvMapper;
+import org.kaidzen.webscrap.model.FormFilterData;
 import org.kaidzen.webscrap.model.IssuedLicense;
-import org.kaidzen.webscrap.scraper.ElementsIssueLicenses;
-import org.kaidzen.webscrap.scraper.IssuedLicenseScraper;
-import org.kaidzen.webscrap.scraper.PermitDocumentScraper;
-import org.kaidzen.webscrap.scraper.PermitsScrapper;
+import org.kaidzen.webscrap.model.PermitDocument;
+import org.kaidzen.webscrap.scraper.*;
 import org.kaidzen.webscrap.service.IssuedLicenseService;
+import org.kaidzen.webscrap.service.PermitDocumentService;
 import org.kaidzen.webscrap.util.StandardTimeClock;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -22,6 +23,7 @@ import javax.sql.DataSource;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 @Configuration
@@ -57,8 +59,13 @@ public class ConfigWebScrapConfiguration {
     }
 
     @Bean
-    public Function<Collection<IssuedLicense>, List<String>> objToCsvMapper() {
-        return new ObjectToCsvMapper();
+    public BiFunction<Element, FormFilterData, Optional<PermitDocument>> permitDocumentElementsMapper() {
+        return new ElementsToPermitDocumentMapper(clock());
+    }
+
+    @Bean
+    public Function<Collection<PermitDocument>, List<String>> objToCsvMapper() {
+        return new PermitDocumentToCsvMapper();
     }
 
     @Bean
@@ -67,8 +74,18 @@ public class ConfigWebScrapConfiguration {
     }
 
     @Bean
+    public ElementsPermitDocument elementsPermitDocument(){
+        return new ElementsPermitDocument(permitDocumentElementsMapper());
+    }
+
+    @Bean
     public IssuedLicenseService issuedLicenseService(){
         return new IssuedLicenseService(issuedLiceseDao());
+    }
+
+    @Bean
+    public PermitDocumentService permitDocumentService(){
+        return new PermitDocumentService();
     }
 
     @Bean
@@ -83,7 +100,7 @@ public class ConfigWebScrapConfiguration {
 
     @Bean
     public PermitDocumentScraper permitDocumentScraper(){
-        return new PermitDocumentScraper();
+        return new PermitDocumentScraper(permitsUrl, elementsPermitDocument(), permitDocumentService());
     }
 
     @Bean

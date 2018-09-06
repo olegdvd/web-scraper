@@ -10,7 +10,7 @@ import org.kaidzen.webscrap.util.StandardTimeClock;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 
-public class IssuedLicense {
+public class IssuedLicense implements ScrappedModel{
 
     @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     private Integer licenseId;
@@ -70,6 +70,7 @@ public class IssuedLicense {
                 .build();
     }
 
+    @Override
     public String toCsv() {
         return String.join(", ", String.valueOf(licenseId),
                 type,

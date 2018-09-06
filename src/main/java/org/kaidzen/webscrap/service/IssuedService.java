@@ -1,14 +1,12 @@
 package org.kaidzen.webscrap.service;
 
-import org.kaidzen.webscrap.model.IssuedLicense;
-
 import java.nio.file.Path;
 import java.util.List;
 
-public interface IssuedService {
+public interface IssuedService<T> {
 
-    void saveLicense(IssuedLicense license);
-    void saveAll(List<IssuedLicense> licenses);
-    List<IssuedLicense> findAllLicenses();
+    void saveLicense(T license);
+    void saveAll(List<T> licenses);
+    List<T> findAllLicenses();
     Path saveToFile(String fileName, List<String> licenses);
 }

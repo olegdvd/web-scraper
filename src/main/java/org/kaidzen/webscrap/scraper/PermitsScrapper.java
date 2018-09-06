@@ -1,18 +1,11 @@
 package org.kaidzen.webscrap.scraper;
 
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.nodes.TextNode;
 import org.kaidzen.webscrap.model.FormFilterData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import static java.util.stream.Collectors.toList;
 
 public class PermitsScrapper {
 
@@ -37,39 +30,6 @@ public class PermitsScrapper {
         this.permitDocumentScraper = permitDocumentScraper;
     }
 
-    public void scrapPermits() {
-        for (String region : regions) {
-            for (String year : years) {
-                for (String month : months) {
-                    filterData = new FormFilterData.Builder()
-                            .month(month)
-                            .year(year)
-                            .region(region)
-                            .build();
-                    Document document = permitDocumentScraper.filterDocuments(baseUrl, filterData);
-                    List<String> list = takeElements("tr", document);
-                    int lastPage = getLastPage(document);
-                    System.out.println(list);
-                }
-            }
-        }
-    }
+    public void scrapPermits() {}
 
-    private int getLastPage(Document document) {
-        String hrefString = document.select("#pages, a").last().attr("href");
-        int length = hrefString.length();
-        return Integer.parseInt(Character.toString(hrefString.charAt(length-1)));
-    }
-
-    private List<String> takeElements(String selection, Document document) {
-        return document.select(selection).stream()
-                .map(getTextNodesAsString())
-                .collect(toList());
-    }
-
-    private Function<Element, String> getTextNodesAsString() {
-        return element -> element.textNodes().stream()
-                .map(TextNode::text)
-                .collect(Collectors.joining());
-    }
 }

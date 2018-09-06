@@ -11,7 +11,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 @Service
-public class IssuedLicenseService implements IssuedService {
+public class IssuedLicenseService implements IssuedService<IssuedLicense> {
 
     private static final Logger LOG = LoggerFactory.getLogger(IssuedLicenseService.class);
     private final IssuedLicenseDao issuedLicenseDao;

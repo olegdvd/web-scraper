@@ -1,6 +1,6 @@
 package org.kaidzen.webscrap;
 
-import org.kaidzen.webscrap.scraper.PermitsScrapper;
+import org.kaidzen.webscrap.scraper.PermitDocumentScraper;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,8 +13,8 @@ public class WebscrapApplication implements CommandLineRunner {
 
     public static void main(String[] args) {
         ConfigurableApplicationContext context = SpringApplication.run(WebscrapApplication.class, args);
-        context.getBean("permitsScrapper", PermitsScrapper.class)
-                .scrapPermits();
+        context.getBean("permitDocumentScraper", PermitDocumentScraper.class)
+                .scrapToCsv("permitDocuments.csv");
 //        context.getBean("issuedLicenseScraper", IssuedLicenseScraper.class)
 //                .scrap();
 //                .scrapToCsv("megoDB.csv");

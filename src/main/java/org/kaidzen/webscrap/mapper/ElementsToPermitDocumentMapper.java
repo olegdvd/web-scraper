@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public class ElementsToPermitDocumentMapper implements BiFunction<Element, FormFilterData, Optional<PermitDocument>> {
 
     private static final Logger LOG = LoggerFactory.getLogger(ElementsToPermitDocumentMapper.class);
-    private static final int FIELDS_TO_MAP = 11; //As for IssuedLicense.class
+    private static final int FIELDS_TO_MAP = 11; //As for PermitDocument.class
     private final StandardTimeClock clock;
     private List<String> stringList;
 
@@ -57,7 +57,6 @@ public class ElementsToPermitDocumentMapper implements BiFunction<Element, FormF
         return Optional.empty();
 
     }
-
 
     private LocalDate getDateOrNow(int i) {
         return MapperUtil.getDateOrMax(getText(i));

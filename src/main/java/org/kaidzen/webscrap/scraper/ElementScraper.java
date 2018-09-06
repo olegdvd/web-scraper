@@ -30,7 +30,7 @@ public abstract class ElementScraper<T> {
 
     public abstract List<T> takeElements(String pagedUrl, Document document);
 
-    protected Document documentForPage(String pagedUrl, int pageNumber) {
+    protected Document getPagetoDocument(String pagedUrl, int pageNumber) {
         String fullUrl = getFullUrl(pagedUrl, pageNumber);
         Optional<HttpUrl> url = Optional.ofNullable(HttpUrl.parse(fullUrl));
         if (url.isPresent()) {

@@ -8,7 +8,7 @@ import org.kaidzen.webscrap.util.StandardTimeClock;
 
 import java.sql.Timestamp;
 
-public class PermitDocument {
+public class PermitDocument implements ScrappedModel{
 
     private String documentId;
     private String region;
@@ -58,6 +58,7 @@ public class PermitDocument {
         );
     }
 
+    @Override
     public String toCsv() {
         return String.join(", ",
                 documentId,

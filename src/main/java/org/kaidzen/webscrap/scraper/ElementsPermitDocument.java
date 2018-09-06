@@ -3,20 +3,21 @@ package org.kaidzen.webscrap.scraper;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.kaidzen.webscrap.model.IssuedLicense;
+import org.kaidzen.webscrap.model.FormFilterData;
+import org.kaidzen.webscrap.model.PermitDocument;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
 import static java.util.stream.Collectors.toList;
 
-public class ElementsIssueLicenses extends ElementScraper<IssuedLicense> {
+public class ElementsPermitDocument extends ElementScraper<PermitDocument> {
 
-    private final Function<Element, Optional<IssuedLicense>> elementsMapper;
+    private final BiFunction<Element, FormFilterData, Optional<PermitDocument>> elementsMapper;
 
 
-    public ElementsIssueLicenses(Function<Element, Optional<IssuedLicense>> elementsMapper) {
+    public ElementsPermitDocument(BiFunction<Element, FormFilterData, Optional<PermitDocument>> elementsMapper) {
         this.elementsMapper = elementsMapper;
     }
 
@@ -34,9 +35,13 @@ public class ElementsIssueLicenses extends ElementScraper<IssuedLicense> {
     }
 
     @Override
-    public List<IssuedLicense> takeElements(String selection, Document document) {
+    public List<PermitDocument> takeElements(String selection, Document document) {
+        return null;
+    }
+
+    public List<PermitDocument> takeFilteredElements(String selection, Document document, FormFilterData filterData){
         return document.select(selection).stream()
-                .map(elementsMapper)
+                .map(element -> elementsMapper.apply(element, filterData))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(toList());

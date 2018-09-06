@@ -48,4 +48,9 @@ public class FormFilterData {
             return new FormFilterData(this);
         }
     }
+
+    @Override
+    public String toString() {
+        return "filter:[region: " +getRegion()+ ", year: " +getYear()+ ", month: " +getMonth();
+    }
 }
