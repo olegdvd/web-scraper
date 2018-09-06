@@ -23,9 +23,9 @@ public class PermitDocumentScraper {
     public PermitDocumentScraper() {
     }
 
-    protected Document getDocument(String url, FormFilterData filterData){
+    protected Document filterDocuments(String url, FormFilterData filterData) {
         Optional<HttpUrl> targetUrl = Optional.ofNullable(HttpUrl.parse(url));
-        if (targetUrl.isPresent()){
+        if (targetUrl.isPresent()) {
             RequestBody formBody = new MultipartBody.Builder()
                     .setType(MultipartBody.FORM)
                     .addFormDataPart("filter[date]", filterData.getYear())

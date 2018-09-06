@@ -6,7 +6,7 @@ public class FormFilterData {
     private String month;
     private String region;
 
-    FormFilterData(Builder builder) {
+    public FormFilterData(Builder builder) {
         this.year = builder.year;
         this.month = builder.month;
         this.region = builder.region;
