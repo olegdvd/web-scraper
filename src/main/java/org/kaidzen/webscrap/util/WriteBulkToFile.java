@@ -23,9 +23,11 @@ public class WriteBulkToFile {
             Path filePath = Paths.get(fileName);
             File file = new File(filePath.toString());
             //TODO if exist - create new file, to save old one
-            if (file.exists()) Files.delete(filePath);
+            if (!file.exists()) {
             Path resultPath = Files.createFile(filePath);
-            res = Files.write(resultPath, stringsList, Charset.forName("UTF-8"), StandardOpenOption.APPEND, StandardOpenOption.WRITE);
+                LOG.info("New file created: {}", resultPath);}
+            res = Files.write(filePath, stringsList, Charset.forName("UTF-8"), StandardOpenOption.APPEND, StandardOpenOption.WRITE);
+
             LOG.info("Added to file: {}, {} lines", res, stringsList.size());
             return res;
         } catch (IOException e) {

@@ -35,6 +35,16 @@ public class ElementsToPermitDocumentMapper implements BiFunction<Element, FormF
                 .map(string -> string.replace("&nbsp;", ""))
                 .collect(Collectors.toList());
         if (checkList(stringList)) {
+            return buildFromElements(filterData);
+        }
+        /* TODO Add Dao with mapped columns; */
+        LOG.info("Skipped  scrapped element");
+        return Optional.empty();
+
+    }
+
+    private Optional<PermitDocument> buildFromElements(FormFilterData filterData) {
+        try {
             return Optional.ofNullable(new PermitDocument.Builder(clock)
                     .documentId(getText(0))
                     .region(getText(1))
@@ -51,11 +61,10 @@ public class ElementsToPermitDocumentMapper implements BiFunction<Element, FormF
                     .year(Short.valueOf(filterData.getYear()))
                     .timestamp()
                     .build());
+        } catch (NumberFormatException e){
+            LOG.info("Skipped for id:[{}], with [{}]", getText(0), filterData);
         }
-        /* TODO Add Dao with mapped columns; */
-        LOG.info("Skipped  scrapped element");
         return Optional.empty();
-
     }
 
     private LocalDate getDateOrNow(int i) {

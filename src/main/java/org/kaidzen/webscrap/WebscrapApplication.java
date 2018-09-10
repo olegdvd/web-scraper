@@ -14,7 +14,7 @@ public class WebscrapApplication implements CommandLineRunner {
     public static void main(String[] args) {
         ConfigurableApplicationContext context = SpringApplication.run(WebscrapApplication.class, args);
         context.getBean("permitDocumentScraper", PermitDocumentScraper.class)
-                .scrapToCsv("permitDocuments.csv");
+                .scrapToCsv("permitDocs_27.csv");
 //        context.getBean("issuedLicenseScraper", IssuedLicenseScraper.class)
 //                .scrap();
 //                .scrapToCsv("megoDB.csv");

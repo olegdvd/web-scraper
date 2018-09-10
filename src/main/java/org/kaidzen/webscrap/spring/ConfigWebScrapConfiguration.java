@@ -4,6 +4,7 @@ import org.jsoup.nodes.Element;
 import org.kaidzen.webscrap.dao.IssuedLicenseDao;
 import org.kaidzen.webscrap.mapper.ElementsToIssuedLicenseMapper;
 import org.kaidzen.webscrap.mapper.ElementsToPermitDocumentMapper;
+import org.kaidzen.webscrap.mapper.ElementsToStringMapper;
 import org.kaidzen.webscrap.mapper.PermitDocumentToCsvMapper;
 import org.kaidzen.webscrap.model.FormFilterData;
 import org.kaidzen.webscrap.model.IssuedLicense;
@@ -74,8 +75,13 @@ public class ConfigWebScrapConfiguration {
     }
 
     @Bean
+    public ElementsToStringMapper toStringMapper(){
+        return new ElementsToStringMapper();
+    }
+
+    @Bean
     public ElementsPermitDocument elementsPermitDocument(){
-        return new ElementsPermitDocument(permitDocumentElementsMapper());
+        return new ElementsPermitDocument(toStringMapper());
     }
 
     @Bean

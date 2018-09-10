@@ -31,6 +31,7 @@ public class PermitDocumentScraper {
     private static final Logger LOG = LoggerFactory.getLogger(ElementScraper.class);
     private static final OkHttpClient CLIENT = new OkHttpClient.Builder()
             .retryOnConnectionFailure(true)
+            .writeTimeout(2, TimeUnit.SECONDS)
             .connectTimeout(15, TimeUnit.SECONDS)
             .build();
     private final Function<Collection<PermitDocument>, List<String>> objToCsvMapper;
@@ -57,19 +58,17 @@ public class PermitDocumentScraper {
                             .region(region)
                             .build();
                     Document document = filterPageToDocument(permitDocumentsUrl, filterData);
-                    Stream<List<PermitDocument>> baseListStream = Stream.of(elementsPermitDocument
-                            .takeFilteredElements("tr", document, filterData));
+                    Stream<List<String>> baseListStream = Stream.of(elementsPermitDocument
+                            .takeFilteredElements("tr", document));
                     int lastPageNumber = getLastPage(document);
                     if (lastPageNumber != 0){
-                        String permitsRequestUrl = permitDocumentsUrl.concat("&&page=%s");
-                        Stream<List<PermitDocument>> restListStream = restOfFilteredStream(permitsRequestUrl,
+                        String permitsRequestUrl = permitDocumentsUrl.concat("&page=%s");
+                        Stream<List<String>> restListStream = restOfFilteredStream(permitsRequestUrl,
                                 lastPageNumber, filterData);
                         Stream.concat(baseListStream, restListStream)
-                                .map(objToCsvMapper::apply)
                                 .forEach(collectionList -> permitDocumentService.saveToFile(fileName, collectionList));
                     }else {
                         baseListStream
-                                .map(objToCsvMapper::apply)
                                 .forEach(collectionList -> permitDocumentService.saveToFile(fileName, collectionList));
                     }
 
@@ -78,11 +77,11 @@ public class PermitDocumentScraper {
         }
     }
 
-    private Stream<List<PermitDocument>> restOfFilteredStream(String baseUrl, int lastPageNumber, FormFilterData filterData) {
+    private Stream<List<String>> restOfFilteredStream(String baseUrl, int lastPageNumber, FormFilterData filterData) {
         LOG.info("There is [{}] pages to scrap with {}", lastPageNumber, filterData);
         return IntStream.rangeClosed(2, lastPageNumber).boxed()
                 .map(integer -> elementsPermitDocument.getPagetoDocument(baseUrl, integer))
-                .map(document -> elementsPermitDocument.takeFilteredElements("tr", document, filterData));
+                .map(document -> elementsPermitDocument.takeFilteredElements("tr", document));
     }
 
     private Document filterPageToDocument(String url, FormFilterData filterData) {

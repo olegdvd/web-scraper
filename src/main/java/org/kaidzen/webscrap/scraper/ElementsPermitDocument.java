@@ -3,21 +3,20 @@ package org.kaidzen.webscrap.scraper;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.kaidzen.webscrap.model.FormFilterData;
 import org.kaidzen.webscrap.model.PermitDocument;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.BiFunction;
+import java.util.function.Function;
 
 import static java.util.stream.Collectors.toList;
 
 public class ElementsPermitDocument extends ElementScraper<PermitDocument> {
 
-    private final BiFunction<Element, FormFilterData, Optional<PermitDocument>> elementsMapper;
+    private final Function<Element, Optional<String>> elementsMapper;
 
 
-    public ElementsPermitDocument(BiFunction<Element, FormFilterData, Optional<PermitDocument>> elementsMapper) {
+    public ElementsPermitDocument(Function<Element, Optional<String>> elementsMapper) {
         this.elementsMapper = elementsMapper;
     }
 
@@ -39,9 +38,9 @@ public class ElementsPermitDocument extends ElementScraper<PermitDocument> {
         return null;
     }
 
-    public List<PermitDocument> takeFilteredElements(String selection, Document document, FormFilterData filterData){
+    public List<String> takeFilteredElements(String selection, Document document) {
         return document.select(selection).stream()
-                .map(element -> elementsMapper.apply(element, filterData))
+                .map(elementsMapper)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(toList());

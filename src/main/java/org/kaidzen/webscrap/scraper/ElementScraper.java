@@ -15,6 +15,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
+import static org.apache.commons.lang3.StringUtils.isEmpty;
+
 public abstract class ElementScraper<T> {
 
     private static final Logger LOG = LoggerFactory.getLogger(ElementScraper.class);
@@ -43,6 +45,7 @@ public abstract class ElementScraper<T> {
             } catch (IOException e) {
                 LOG.error("Source server is unreachable or changed/wrong URL: {}", fullUrl);
             }
+            if(isEmpty(html)) return new Document("");
             return Jsoup.parse(html);
         }
         LOG.warn("Failed to scrap from URL: {}", fullUrl);
