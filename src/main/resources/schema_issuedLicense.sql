@@ -2,22 +2,6 @@
 
 CREATE TABLE IF NOT EXISTS issuedLicenses_aug (
 
-  //            documentId  VARCHAR(17) NOT NULL,
-  //            region  VARCHAR(25) NOT NULL,
-  //            documentType  VARCHAR(60) NOT NULL,
-  //            subject VARCHAR(400) NOT NULL,
-  //            category  VARCHAR(100) NOT NULL
-  //            customer
-  //            techSupervision
-  //            designer
-  //            supervision
-  //            contractor
-  //            landInfo
-  //            month
-  //            year
-  //            timestamp
-  //            md5
-
   licenseId   INT          NOT NULL,
   type        VARCHAR(100) NOT NULL,
   license     VARCHAR(40)  NOT NULL,
