@@ -1,23 +1,21 @@
 package org.kaidzen.webscrap.dao;
 
-import org.kaidzen.webscrap.model.IssuedLicense;
-
 import java.util.List;
 
 public interface GeneralDao<T> {
-    List<T> getAllLicensees();
+    List<T> getAll();
 
-    T getLicenseById(Integer licenseId);
+    T getById(Integer Id);
 
-    void addLicense(T license);
+    void add(T item);
 
-    int addAllLicenses(List<T> licenses);
+    int addAll(List<T> items);
 
-    void updateLicense(T license);
+    void update(T item);
 
-    void deleteLicense(Integer licenseId);
+    void delete(Integer Id);
 
-    boolean isLicenseIdExists(Integer licenseId);
+    boolean isWithIdExists(Integer Id);
 
-    void addAllNonDuplicatedLicenses(List<IssuedLicense> licenses);
+    void addAllNonDuplicated(List<T> items);
 }

@@ -24,18 +24,18 @@ public class IssuedLicenseService implements IssuedService<IssuedLicense> {
 
     @Override
     public void saveLicense(IssuedLicense license) {
-        issuedLicenseDao.addLicense(license);
+        issuedLicenseDao.add(license);
     }
 
     @Override
     public void saveAll(List<IssuedLicense> licenses){
-        int wasSaved = issuedLicenseDao.addAllLicenses(licenses);
+        int wasSaved = issuedLicenseDao.addAll(licenses);
         LOG.info("Saved to base rows: {}", wasSaved);
     }
 
     @Override
     public List<IssuedLicense> findAllLicenses() {
-        return issuedLicenseDao.getAllLicensees();
+        return issuedLicenseDao.getAll();
     }
 
     @Override

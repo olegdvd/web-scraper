@@ -26,6 +26,66 @@ public class PermitDocument implements ScrappedModel{
     private Timestamp timestamp;
     private String md5;
 
+    public String getDocumentId() {
+        return documentId;
+    }
+
+    public String getRegion() {
+        return region;
+    }
+
+    public String getDocumentType() {
+        return documentType;
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public short getCategory() {
+        return category;
+    }
+
+    public String getCustomer() {
+        return customer;
+    }
+
+    public String getTechSupervision() {
+        return techSupervision;
+    }
+
+    public String getDesigner() {
+        return designer;
+    }
+
+    public String getSupervision() {
+        return supervision;
+    }
+
+    public String getContractor() {
+        return contractor;
+    }
+
+    public String getLandInfo() {
+        return landInfo;
+    }
+
+    public short getMonth() {
+        return month;
+    }
+
+    public short getYear() {
+        return year;
+    }
+
+    public Timestamp getTimestamp() {
+        return timestamp;
+    }
+
+    public String getMd5() {
+        return md5;
+    }
+
     PermitDocument(Builder builder) {
         this.documentId = builder.documentId;
         this.region = builder.region;

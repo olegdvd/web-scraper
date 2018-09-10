@@ -44,19 +44,19 @@ public class IssuedLicenseDao implements GeneralDao<IssuedLicense> {
     }
 
     @Override
-    public List<IssuedLicense> getAllLicensees() {
+    public List<IssuedLicense> getAll() {
         String sql = SELECT + COLUMN_STR + FROM;
         return jdbcTemplate.query(sql, new IssuedLicenseRowMapper());
     }
 
     @Override
-    public IssuedLicense getLicenseById(Integer licenseId) {
+    public IssuedLicense getById(Integer licenseId) {
         String sql = SELECT + COLUMN_STR + FROM + WHERE;
         return jdbcTemplate.queryForObject(sql, new IssuedLicenseRowMapper());
     }
 
     @Override
-    public void addLicense(IssuedLicense license) {
+    public void add(IssuedLicense license) {
         String sql = INSERT + " (" + COLUMN_STR + ")" + VALUES;
         jdbcTemplate.update(sql,
                 license.getLicenseId(),
@@ -72,7 +72,7 @@ public class IssuedLicenseDao implements GeneralDao<IssuedLicense> {
     }
 
     @Override
-    public int addAllLicenses(List<IssuedLicense> licenses) {
+    public int addAll(List<IssuedLicense> licenses) {
         String sql = INSERT + " (" + COLUMN_STR + ")" + VALUES;
         try {
             jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
@@ -99,13 +99,13 @@ public class IssuedLicenseDao implements GeneralDao<IssuedLicense> {
             return licenses.size();
         } catch (DuplicateKeyException e) {
             LOG.info("Found duplicates in base, start to check one by one...");
-            this.addAllNonDuplicatedLicenses(licenses);
+            this.addAllNonDuplicated(licenses);
         }
         return 0;
     }
 
     @Override
-    public void addAllNonDuplicatedLicenses(List<IssuedLicense> licenses) {
+    public void addAllNonDuplicated(List<IssuedLicense> licenses) {
         String iDs = licenses.stream()
                 .map(license -> license.getLicenseId().toString())
                 .collect(joining(", "));
@@ -117,7 +117,7 @@ public class IssuedLicenseDao implements GeneralDao<IssuedLicense> {
                 .filter(getIssuedLicensePredicate(currentLicensesPair))
                 .filter(license -> !currentLicensesPair.containsValue(license.getMd5()))
                 .collect(toList());
-        if (!unsavedLicenses.isEmpty()) addAllLicenses(unsavedLicenses);
+        if (!unsavedLicenses.isEmpty()) addAll(unsavedLicenses);
     }
 
     private Predicate<IssuedLicense> getIssuedLicensePredicate(Map<Integer, String> presentLicensesIds) {
@@ -125,18 +125,18 @@ public class IssuedLicenseDao implements GeneralDao<IssuedLicense> {
     }
 
     @Override
-    public void updateLicense(IssuedLicense license) {
+    public void update(IssuedLicense license) {
         //not now
     }
 
     @Override
-    public void deleteLicense(Integer licenseId) {
+    public void delete(Integer licenseId) {
         String sql = DELETE + WHERE;
         jdbcTemplate.update(sql, licenseId);
     }
 
     @Override
-    public boolean isLicenseIdExists(Integer licenseId) {
+    public boolean isWithIdExists(Integer licenseId) {
         String sql = SELECT + "COUNT(*)" + FROM + WHERE;
         Integer countLicenseId = jdbcTemplate.queryForObject(sql, Integer.class, licenseId);
         return countLicenseId >= 0;
