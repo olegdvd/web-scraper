@@ -39,4 +39,8 @@ public class PermitDocumentService implements IssuedService<PermitDocument> {
     public Path saveToFile(String fileName, List<String> licenses) {
         return bulkToFile.writeToFile(fileName, licenses);
     }
+
+    public Path saveToFile(String fileName, List<String> licenses, String presentPageFilter) {
+        return bulkToFile.writeToFile(fileName, licenses, presentPageFilter);
+    }
 }

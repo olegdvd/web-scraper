@@ -61,20 +61,27 @@ public class PermitDocumentScraper {
                     Stream<List<String>> baseListStream = Stream.of(elementsPermitDocument
                             .takeFilteredElements("tr", document));
                     int lastPageNumber = getLastPage(document);
+                    String presentPageFilter = getPresentPageFilter(document);
                     if (lastPageNumber != 0){
                         String permitsRequestUrl = permitDocumentsUrl.concat("&page=%s");
                         Stream<List<String>> restListStream = restOfFilteredStream(permitsRequestUrl,
                                 lastPageNumber, filterData);
                         Stream.concat(baseListStream, restListStream)
-                                .forEach(collectionList -> permitDocumentService.saveToFile(fileName, collectionList));
+                                .forEach(collectionList -> permitDocumentService.saveToFile(
+                                        fileName, collectionList,
+                                        presentPageFilter.concat("| "+String.format(permitsRequestUrl, lastPageNumber))));
                     }else {
                         baseListStream
-                                .forEach(collectionList -> permitDocumentService.saveToFile(fileName, collectionList));
+                                .forEach(collectionList -> permitDocumentService.saveToFile(fileName, collectionList, presentPageFilter.concat("| "+permitDocumentsUrl)));
                     }
 
                 }
             }
         }
+    }
+
+    private String getPresentPageFilter(Document document) {
+        return document.body().childNodes().get(6).toString().replace("&nbsp;", "");
     }
 
     private Stream<List<String>> restOfFilteredStream(String baseUrl, int lastPageNumber, FormFilterData filterData) {

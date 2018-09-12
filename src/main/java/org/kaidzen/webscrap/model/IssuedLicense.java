@@ -72,7 +72,7 @@ public class IssuedLicense implements ScrappedModel{
 
     @Override
     public String toCsv() {
-        return String.join(", ", String.valueOf(licenseId),
+        return String.join("| ", String.valueOf(licenseId),
                 type,
                 license,
                 String.valueOf(edrpo),

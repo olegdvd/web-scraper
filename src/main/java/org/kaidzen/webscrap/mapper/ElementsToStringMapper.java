@@ -31,7 +31,7 @@ public class ElementsToStringMapper implements Function<Element, Optional<String
         if (checkList(stringList)) {
             return Optional.ofNullable(
                     stringList.stream()
-                            .collect(joining(", "))
+                            .collect(joining("| "))
             );
         }
         /* TODO Add Dao with mapped columns; */
