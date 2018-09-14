@@ -38,6 +38,7 @@ public class PermitDocumentScraper {
     private final ElementsPermitDocument elementsPermitDocument;
     private final PermitDocumentService permitDocumentService;
     private final String permitDocumentsUrl;
+    private String cookie;
 
     public PermitDocumentScraper(String permitDocumentsUrl,
                                  ElementsPermitDocument elementsPermitDocument,
@@ -62,17 +63,17 @@ public class PermitDocumentScraper {
                             .takeFilteredElements("tr", document));
                     int lastPageNumber = getLastPage(document);
                     String presentPageFilter = getPresentPageFilter(document);
-                    if (lastPageNumber != 0){
+                    if (lastPageNumber != 0) {
                         String permitsRequestUrl = permitDocumentsUrl.concat("&page=%s");
                         Stream<List<String>> restListStream = restOfFilteredStream(permitsRequestUrl,
-                                lastPageNumber, filterData);
+                                lastPageNumber, filterData, cookie);
                         Stream.concat(baseListStream, restListStream)
                                 .forEach(collectionList -> permitDocumentService.saveToFile(
                                         fileName, collectionList,
-                                        presentPageFilter.concat("| "+String.format(permitsRequestUrl, lastPageNumber))));
-                    }else {
+                                        presentPageFilter.concat("| " + String.format(permitsRequestUrl, lastPageNumber))));
+                    } else {
                         baseListStream
-                                .forEach(collectionList -> permitDocumentService.saveToFile(fileName, collectionList, presentPageFilter.concat("| "+permitDocumentsUrl)));
+                                .forEach(collectionList -> permitDocumentService.saveToFile(fileName, collectionList, presentPageFilter.concat("| " + permitDocumentsUrl)));
                     }
 
                 }
@@ -84,10 +85,10 @@ public class PermitDocumentScraper {
         return document.body().childNodes().get(6).toString().replace("&nbsp;", "");
     }
 
-    private Stream<List<String>> restOfFilteredStream(String baseUrl, int lastPageNumber, FormFilterData filterData) {
+    private Stream<List<String>> restOfFilteredStream(String baseUrl, int lastPageNumber, FormFilterData filterData, String cookie) {
         LOG.info("There is [{}] pages to scrap with {}", lastPageNumber, filterData);
         return IntStream.rangeClosed(2, lastPageNumber).boxed()
-                .map(integer -> elementsPermitDocument.getPagetoDocument(baseUrl, integer))
+                .map(integer -> elementsPermitDocument.getPagetoDocument(baseUrl, integer, cookie))
                 .map(document -> elementsPermitDocument.takeFilteredElements("tr", document));
     }
 
@@ -108,6 +109,8 @@ public class PermitDocumentScraper {
             try {
                 Response response = CLIENT.newCall(request).execute();
                 LOG.info("Response from [{}] with: {}", url, response.code());
+                cookie = response.headers().get("Set-Cookie");
+                setCookie(cookie);
                 html = Objects.requireNonNull(response.body()).string();
             } catch (IOException e) {
                 LOG.error("Source server is unreachable or changed/wrong URL: {} with parameters: {}", url, filterData);
@@ -135,5 +138,13 @@ public class PermitDocumentScraper {
         return element -> element.textNodes().stream()
                 .map(TextNode::text)
                 .collect(Collectors.joining());
+    }
+
+    public String getCookie() {
+        return cookie;
+    }
+
+    private void setCookie(String cookie) {
+        this.cookie = cookie;
     }
 }

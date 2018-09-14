@@ -32,11 +32,14 @@ public abstract class ElementScraper<T> {
 
     public abstract List<T> takeElements(String pagedUrl, Document document);
 
-    protected Document getPagetoDocument(String pagedUrl, int pageNumber) {
+    protected Document getPagetoDocument(String pagedUrl, int pageNumber, String cookie) {
         String fullUrl = getFullUrl(pagedUrl, pageNumber);
         Optional<HttpUrl> url = Optional.ofNullable(HttpUrl.parse(fullUrl));
         if (url.isPresent()) {
-            Request request = new Request.Builder().url(url.get()).get().build();
+            boolean isCookie = Objects.isNull(cookie);
+            Request request = new Request.Builder().url(url.get())
+                    .addHeader("Cookie", isCookie ? "" : cookie)
+                    .get().build();
             String html = null;
             try {
                 Response response = CLIENT.newCall(request).execute();

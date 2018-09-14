@@ -22,7 +22,7 @@ public class ElementsIssueLicenses extends ElementScraper<IssuedLicense> {
 
     @Override
     public int pagesToScrap(String baseUrl) {
-        Document document = getPagetoDocument(baseUrl, 1);
+        Document document = getPagetoDocument(baseUrl, 1, null);
         List elements = document.select("tr");
         int lastElement = elements.size() - 1;
         Element lastRow = (Element) elements.get(lastElement);
