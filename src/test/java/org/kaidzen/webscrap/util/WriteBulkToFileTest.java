@@ -16,12 +16,12 @@ import static org.junit.Assert.assertTrue;
 public class WriteBulkToFileTest {
 
     private static final String FILE_NAME = "test.txt";
-    private static final List<String> LIST = Arrays.asList("Zetta", "Tetta", "Gamma");
+    private static final List<String> LIST = Arrays.asList("Filter", "Zetta| Filter", "Tetta| Filter", "Gamma| Filter");
     private WriteBulkToFile bulkToFile;
     private Path result;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         bulkToFile = new WriteBulkToFile();
     }
 
