@@ -49,7 +49,7 @@ public class PermitDocumentScraper {
         this.objToCsvMapper = new PermitDocumentToCsvMapper();
     }
 
-    public void scrapToCsv(String fileName) {
+    public void scrap(String fileName) {
         for (String region : getRegions()) {
             for (String year : getYears()) {
                 for (String month : getMonths()) {
@@ -59,21 +59,25 @@ public class PermitDocumentScraper {
                             .region(region)
                             .build();
                     Document document = filterPageToDocument(permitDocumentsUrl, filterData);
-                    Stream<List<String>> baseListStream = Stream.of(elementsPermitDocument
-                            .takeFilteredElements("tr", document));
+                    Stream<List<PermitDocument>> baseListStream = Stream.of(elementsPermitDocument
+                            .takeElements("tr", document, filterData));
                     int lastPageNumber = getLastPage(document);
-                    String presentPageFilter = getPresentPageFilter(document);
+//                    String presentPageFilter = getPresentPageFilter(document);
                     if (lastPageNumber != 0) {
                         String permitsRequestUrl = permitDocumentsUrl.concat("&page=%s");
-                        Stream<List<String>> restListStream = restOfFilteredStream(permitsRequestUrl,
+                        Stream<List<PermitDocument>> restListStream = restOfFilteredStream(permitsRequestUrl,
                                 lastPageNumber, filterData, cookie);
                         Stream.concat(baseListStream, restListStream)
-                                .forEach(collectionList -> permitDocumentService.saveToFile(
-                                        fileName, collectionList,
-                                        presentPageFilter.concat("| " + String.format(permitsRequestUrl, lastPageNumber))));
+                                .forEach(permitDocumentService::saveAll);
+//                                .forEach(collectionList ->
+//                                        permitDocumentService.saveToFile(
+//                                        fileName, collectionList,
+//                                        presentPageFilter.concat("| " + String.format(permitsRequestUrl, lastPageNumber)))
+                        ;
                     } else {
                         baseListStream
-                                .forEach(collectionList -> permitDocumentService.saveToFile(fileName, collectionList, presentPageFilter.concat("| " + permitDocumentsUrl)));
+                                .forEach(permitDocumentService::saveAll);
+//                                .forEach(collectionList -> permitDocumentService.saveToFile(fileName, collectionList, presentPageFilter.concat("| " + permitDocumentsUrl)));
                     }
 
                 }
@@ -85,11 +89,11 @@ public class PermitDocumentScraper {
         return document.body().childNodes().get(6).toString().replace("&nbsp;", "");
     }
 
-    private Stream<List<String>> restOfFilteredStream(String baseUrl, int lastPageNumber, FormFilterData filterData, String cookie) {
+    private Stream<List<PermitDocument>> restOfFilteredStream(String baseUrl, int lastPageNumber, FormFilterData filterData, String cookie) {
         LOG.info("There is [{}] pages to scrap with {}", lastPageNumber, filterData);
         return IntStream.rangeClosed(2, lastPageNumber).boxed()
                 .map(integer -> elementsPermitDocument.getPagetoDocument(baseUrl, integer, cookie))
-                .map(document -> elementsPermitDocument.takeFilteredElements("tr", document));
+                .map(document -> elementsPermitDocument.takeElements("tr", document, filterData));
     }
 
     private Document filterPageToDocument(String url, FormFilterData filterData) {

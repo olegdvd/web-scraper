@@ -6,6 +6,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.kaidzen.webscrap.document.model.FormFilterData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,7 +31,7 @@ public abstract class ElementScraper<T> {
 
     public abstract int pagesToScrap(String baseUrl);
 
-    public abstract List<T> takeElements(String pagedUrl, Document document);
+    public abstract List<T> takeElements(String pagedUrl, Document document, FormFilterData filterData);
 
     protected Document getPagetoDocument(String pagedUrl, int pageNumber, String cookie) {
         String fullUrl = getFullUrl(pagedUrl, pageNumber);
@@ -48,7 +49,7 @@ public abstract class ElementScraper<T> {
             } catch (IOException e) {
                 LOG.error("Source server is unreachable or changed/wrong URL: {}", fullUrl);
             }
-            if(isEmpty(html)) return new Document("");
+            if (isEmpty(html)) return new Document("");
             return Jsoup.parse(html);
         }
         LOG.warn("Failed to scrap from URL: {}", fullUrl);

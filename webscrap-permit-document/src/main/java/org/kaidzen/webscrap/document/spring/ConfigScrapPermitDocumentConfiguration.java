@@ -1,6 +1,7 @@
 package org.kaidzen.webscrap.document.spring;
 
 import org.jsoup.nodes.Element;
+import org.kaidzen.webscrap.document.dao.PermitDocumentDao;
 import org.kaidzen.webscrap.document.mapper.ElementsToPermitDocumentMapper;
 import org.kaidzen.webscrap.document.mapper.ElementsToStringMapper;
 import org.kaidzen.webscrap.document.mapper.PermitDocumentToCsvMapper;
@@ -29,9 +30,6 @@ import java.util.function.Function;
 @PropertySource("scraper.properties")
 public class ConfigScrapPermitDocumentConfiguration {
 
-    @Value("${web.issuedLicenseUrl}")
-    private String issuedLicenseUrl;
-
     @Value("${web.permitsUrl}")
     private String permitsUrl;
 
@@ -53,7 +51,7 @@ public class ConfigScrapPermitDocumentConfiguration {
     }
 
     @Bean
-    public BiFunction<Element, FormFilterData, Optional<PermitDocument>> permitDocumentElementsMapper() {
+    public BiFunction<Element, FormFilterData, Optional<PermitDocument>> toDocumentMapper() {
         return new ElementsToPermitDocumentMapper(clock());
     }
 
@@ -68,13 +66,18 @@ public class ConfigScrapPermitDocumentConfiguration {
     }
 
     @Bean
+    public PermitDocumentDao permitDocumentDao() {
+        return new PermitDocumentDao(jdbcTemplate(), clock());
+    }
+
+    @Bean
     public ElementsPermitDocument elementsPermitDocument() {
-        return new ElementsPermitDocument(toStringMapper());
+        return new ElementsPermitDocument(toStringMapper(), toDocumentMapper());
     }
 
     @Bean
     public PermitDocumentService permitDocumentService() {
-        return new PermitDocumentService();
+        return new PermitDocumentService(permitDocumentDao());
     }
 
     @Bean

@@ -14,8 +14,8 @@ public class ScrapIssuedLicenses implements CommandLineRunner {
     public static void main(String[] args) {
         ConfigurableApplicationContext context = SpringApplication.run(ScrapIssuedLicenses.class, args);
         context.getBean("issuedLicenseScraper", IssuedLicenseScraper.class)
-//                .scrap();
-                .scrapToCsv("issued-licenses.csv");
+                .scrap();
+//                .scrapToCsv("issued-licenses.csv");
         context.stop();
 
     }

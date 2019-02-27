@@ -9,6 +9,7 @@
     <modules>
         <module>webscrap-issued-license</module>
 		<module>webscrap-permit-document</module>
+		<module>webscrap-common</module>
 	</modules>
     <packaging>pom</packaging>
 

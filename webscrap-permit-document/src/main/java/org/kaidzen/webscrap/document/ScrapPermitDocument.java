@@ -8,16 +8,13 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.ConfigurableApplicationContext;
 
 @SpringBootApplication
-@EntityScan("org.kaidzen.webscrap.model")
+@EntityScan("org.kaidzen.webscrap.document.model")
 public class ScrapPermitDocument implements CommandLineRunner {
 
     public static void main(String[] args) {
         ConfigurableApplicationContext context = SpringApplication.run(ScrapPermitDocument.class, args);
         context.getBean("permitDocumentScraper", PermitDocumentScraper.class)
-                .scrapToCsv("permit-documents.csv");
-//        context.getBean("issuedLicenseScraper", IssuedLicenseScraper.class)
-//                .scrap();
-//                .scrapToCsv("megoDB.csv");
+                .scrap("");
         context.stop();
 
     }

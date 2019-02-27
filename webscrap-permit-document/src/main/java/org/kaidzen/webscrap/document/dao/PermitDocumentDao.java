@@ -24,7 +24,7 @@ public class PermitDocumentDao implements GeneralDao<PermitDocument> {
 
     private static final Logger LOG = LoggerFactory.getLogger(PermitDocumentDao.class);
 
-    private static final String TABLE = " permitdocument";
+    private static final String TABLE = " permitdocuments";
     private static final String SELECT = "SELECT ";
     private static final String INSERT = "INSERT INTO " + TABLE;
     private static final String DELETE = "DELETE ";
