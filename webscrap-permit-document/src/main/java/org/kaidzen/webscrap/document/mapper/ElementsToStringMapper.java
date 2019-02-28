@@ -4,8 +4,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.kaidzen.webscrap.document.util.MapperUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -17,7 +15,6 @@ import static java.util.stream.Collectors.joining;
 
 public class ElementsToStringMapper implements Function<Element, Optional<String>> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ElementsToStringMapper.class);
     private static final int FIELDS_TO_MAP = 11; //As for PermitDocument.class
     private List<String> stringList;
 
@@ -35,7 +32,6 @@ public class ElementsToStringMapper implements Function<Element, Optional<String
             );
         }
         /* TODO Add Dao with mapped columns; */
-        LOG.info("Skipped  scrapped element");
         return Optional.empty();
     }
 

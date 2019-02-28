@@ -38,7 +38,6 @@ public class ElementsToPermitDocumentMapper implements BiFunction<Element, FormF
             return buildFromElements(filterData);
         }
         /* TODO Add Dao with mapped columns; */
-        LOG.info("Skipped  scrapped element");
         return Optional.empty();
 
     }

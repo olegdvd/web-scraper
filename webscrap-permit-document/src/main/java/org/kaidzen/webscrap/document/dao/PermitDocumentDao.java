@@ -118,6 +118,7 @@ public class PermitDocumentDao implements GeneralDao<PermitDocument> {
     public void addAllNonDuplicated(List<PermitDocument> permitDocuments) {
         String iDs = permitDocuments.stream()
                 .map(PermitDocument::getDocumentId)
+                .map(this::wrapAsSqlParam)
                 .collect(joining(", "));
         String sql = SELECT + COLUMN_STR + FROM + WHERE_IDS + String.format("(%s)", iDs);
         List<PermitDocument> presentLicenses = jdbcTemplate.query(sql, new PermitDocumentRowMapper());
@@ -128,6 +129,10 @@ public class PermitDocumentDao implements GeneralDao<PermitDocument> {
                 .filter(license -> !currentLicensesPair.containsValue(license.getMd5()))
                 .collect(toList());
         if (!unsavedLicenses.isEmpty()) addAll(unsavedLicenses);
+    }
+
+    private StringBuilder wrapAsSqlParam(String id) {
+        return new StringBuilder("'").append(id).append("'");
     }
 
     private Predicate<PermitDocument> getPermitDocumentPredicate(Map<String, String> presentDocumentsIds) {
