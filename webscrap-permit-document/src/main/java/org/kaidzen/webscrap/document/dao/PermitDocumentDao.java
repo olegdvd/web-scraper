@@ -121,12 +121,12 @@ public class PermitDocumentDao implements GeneralDao<PermitDocument> {
                 .map(this::wrapAsSqlParam)
                 .collect(joining(", "));
         String sql = SELECT + COLUMN_STR + FROM + WHERE_IDS + String.format("(%s)", iDs);
-        List<PermitDocument> presentLicenses = jdbcTemplate.query(sql, new PermitDocumentRowMapper());
-        Map<String, String> currentLicensesPair = presentLicenses.stream()
+        List<PermitDocument> permitDocumentList = jdbcTemplate.query(sql, new PermitDocumentRowMapper());
+        Map<String, String> currentDocumentsPair = permitDocumentList.stream()
                 .collect(toMap(PermitDocument::getDocumentId, PermitDocument::getMd5));
         List<PermitDocument> unsavedLicenses = permitDocuments.stream()
-                .filter(getPermitDocumentPredicate(currentLicensesPair))
-                .filter(license -> !currentLicensesPair.containsValue(license.getMd5()))
+                .filter(getPermitDocumentPredicate(currentDocumentsPair))
+                .filter(license -> !currentDocumentsPair.containsValue(license.getMd5()))
                 .collect(toList());
         if (!unsavedLicenses.isEmpty()) addAll(unsavedLicenses);
     }
