@@ -3,10 +3,10 @@ package org.kaidzen.webscrap.document.mapper;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.kaidzen.webscrap.common.util.MapperUtil;
+import org.kaidzen.webscrap.common.util.StandardTimeClock;
 import org.kaidzen.webscrap.document.model.FormFilterData;
 import org.kaidzen.webscrap.document.model.PermitDocument;
-import org.kaidzen.webscrap.document.util.MapperUtil;
-import org.kaidzen.webscrap.document.util.StandardTimeClock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -3,8 +3,8 @@ package org.kaidzen.webscrap.document.model;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.kaidzen.webscrap.document.util.Md5Calculator;
-import org.kaidzen.webscrap.document.util.StandardTimeClock;
+import org.kaidzen.webscrap.common.util.Md5Calculator;
+import org.kaidzen.webscrap.common.util.StandardTimeClock;
 
 import java.sql.Timestamp;
 

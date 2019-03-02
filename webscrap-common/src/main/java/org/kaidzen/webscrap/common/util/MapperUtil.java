@@ -1,4 +1,4 @@
-package org.kaidzen.webscrap.document.util;
+package org.kaidzen.webscrap.common.util;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

@@ -1,8 +1,8 @@
 package org.kaidzen.webscrap.document.dao;
 
 import org.junit.Test;
+import org.kaidzen.webscrap.common.util.StandardTimeClock;
 import org.kaidzen.webscrap.document.model.PermitDocument;
-import org.kaidzen.webscrap.document.util.StandardTimeClock;
 
 import java.util.Arrays;
 import java.util.List;

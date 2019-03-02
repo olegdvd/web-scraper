@@ -1,6 +1,7 @@
 package org.kaidzen.webscrap.document.spring;
 
 import org.jsoup.nodes.Element;
+import org.kaidzen.webscrap.common.util.StandardTimeClock;
 import org.kaidzen.webscrap.document.dao.PermitDocumentDao;
 import org.kaidzen.webscrap.document.mapper.ElementsToPermitDocumentMapper;
 import org.kaidzen.webscrap.document.mapper.ElementsToStringMapper;
@@ -11,7 +12,6 @@ import org.kaidzen.webscrap.document.scraper.ElementsPermitDocument;
 import org.kaidzen.webscrap.document.scraper.PermitDocumentScraper;
 import org.kaidzen.webscrap.document.scraper.PermitsScrapper;
 import org.kaidzen.webscrap.document.service.PermitDocumentService;
-import org.kaidzen.webscrap.document.util.StandardTimeClock;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

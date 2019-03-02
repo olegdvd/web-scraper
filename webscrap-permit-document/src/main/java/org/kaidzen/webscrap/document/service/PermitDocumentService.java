@@ -1,8 +1,8 @@
 package org.kaidzen.webscrap.document.service;
 
+import org.kaidzen.webscrap.common.util.WriteBulkToFile;
 import org.kaidzen.webscrap.document.dao.PermitDocumentDao;
 import org.kaidzen.webscrap.document.model.PermitDocument;
-import org.kaidzen.webscrap.document.util.WriteBulkToFile;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.Path;

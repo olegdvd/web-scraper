@@ -3,7 +3,7 @@ package org.kaidzen.webscrap.document.mapper;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.kaidzen.webscrap.document.util.MapperUtil;
+import org.kaidzen.webscrap.common.util.MapperUtil;
 
 import java.time.LocalDate;
 import java.util.List;

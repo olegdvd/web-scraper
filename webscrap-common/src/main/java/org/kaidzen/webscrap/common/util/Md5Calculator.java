@@ -1,6 +1,7 @@
-package org.kaidzen.webscrap.document.util;
+package org.kaidzen.webscrap.common.util;
 
 import javax.xml.bind.DatatypeConverter;
+import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
@@ -17,7 +18,7 @@ public class Md5Calculator {
     public static String calculateMd5(String... args){
         String joinedString = Arrays.stream(args)
                 .collect(joining(""));
-        MD_5.update(joinedString.getBytes());
+        MD_5.update(joinedString.getBytes(Charset.forName("UTF-8")));
         byte[] digestBites = MD_5.digest();
         return DatatypeConverter.printHexBinary(digestBites).toUpperCase();
     }
