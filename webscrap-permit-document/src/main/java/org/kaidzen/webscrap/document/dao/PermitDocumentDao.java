@@ -15,7 +15,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Predicate;
 
 import static java.util.stream.Collectors.*;
 
@@ -109,34 +108,35 @@ public class PermitDocumentDao implements GeneralDao<PermitDocument> {
             return permitDocuments.size();
         } catch (DuplicateKeyException e) {
             LOG.info("Found duplicates in base, start to check one by one...");
-            this.addAllNonDuplicated(permitDocuments);
+            int newAdded = this.addAllNonDuplicated(permitDocuments);
+            if (newAdded>0) {
+                LOG.info("Added unsaved {} records to base", newAdded);
+            }
         }
         return 0;
     }
 
     @Override
-    public void addAllNonDuplicated(List<PermitDocument> permitDocuments) {
+    public int addAllNonDuplicated(List<PermitDocument> permitDocuments) {
         String iDs = permitDocuments.stream()
                 .map(PermitDocument::getDocumentId)
                 .map(this::wrapAsSqlParam)
                 .collect(joining(", "));
         String sql = SELECT + COLUMN_STR + FROM + WHERE_IDS + String.format("(%s)", iDs);
         List<PermitDocument> permitDocumentList = jdbcTemplate.query(sql, new PermitDocumentRowMapper());
-        Map<String, String> currentDocumentsPair = permitDocumentList.stream()
-                .collect(toMap(PermitDocument::getDocumentId, PermitDocument::getMd5));
+        Map<String, String> currentDocumentsPairs = permitDocumentList.stream()
+                .collect(toMap(PermitDocument::getMd5, PermitDocument::getDocumentId));
         List<PermitDocument> unsavedLicenses = permitDocuments.stream()
-                .filter(getPermitDocumentPredicate(currentDocumentsPair))
-                .filter(license -> !currentDocumentsPair.containsValue(license.getMd5()))
+                .filter(document -> !currentDocumentsPairs.containsKey(document.getMd5()))
                 .collect(toList());
-        if (!unsavedLicenses.isEmpty()) addAll(unsavedLicenses);
+        if (!unsavedLicenses.isEmpty()) {
+            return addAll(unsavedLicenses);
+        }
+        return 0;
     }
 
     private StringBuilder wrapAsSqlParam(String id) {
         return new StringBuilder("'").append(id).append("'");
-    }
-
-    private Predicate<PermitDocument> getPermitDocumentPredicate(Map<String, String> presentDocumentsIds) {
-        return permitDocument -> !presentDocumentsIds.containsKey(permitDocument.getDocumentId());
     }
 
     @Override
@@ -176,21 +176,6 @@ public class PermitDocumentDao implements GeneralDao<PermitDocument> {
                     .year(rs.getShort("year"))
                     .timestamp()
                     .build();
-//            documentId
-//            region
-//            documentType
-//            subject
-//            category
-//            customer
-//            techSupervision
-//            designer
-//            supervision
-//            contractor
-//            landInfo
-//            month
-//            year
-//            timestamp
-//            md5
         }
     }
 }

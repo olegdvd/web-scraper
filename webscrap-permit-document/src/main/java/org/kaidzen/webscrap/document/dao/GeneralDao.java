@@ -17,5 +17,5 @@ public interface GeneralDao<T> {
 
     boolean isWithIdExists(Integer Id);
 
-    void addAllNonDuplicated(List<T> items);
+    int addAllNonDuplicated(List<T> items);
 }
