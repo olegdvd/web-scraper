@@ -1,6 +1,8 @@
 package org.kaidzen.webscrap.document.model;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 public class FormFilterConstants {
@@ -22,7 +24,14 @@ public class FormFilterConstants {
     );
 
     public static List<String> getYears() {
+        years.sort(Comparator.reverseOrder());
         return years;
+    }
+
+    public static List<String> getReversedYears(){
+        List<String> list = new ArrayList<>(years);
+        list.sort(Comparator.reverseOrder());
+        return list;
     }
 
     public static List<String> getMonths() {

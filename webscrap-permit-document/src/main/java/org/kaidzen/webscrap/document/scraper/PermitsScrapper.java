@@ -13,7 +13,7 @@ public class PermitsScrapper {
     private final String baseUrl;
     private final PermitDocumentScraper permitDocumentScraper;
     private final List<String> years = Arrays.asList(
-            "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018"
+            "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019"
     );
     private final List<String> months = Arrays.asList(
             "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"

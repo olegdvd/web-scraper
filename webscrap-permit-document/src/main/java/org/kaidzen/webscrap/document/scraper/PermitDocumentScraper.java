@@ -51,7 +51,7 @@ public class PermitDocumentScraper {
 
     public void scrap(String fileName) {
         for (String region : getRegions()) {
-            for (String year : getYears()) {
+            for (String year : getReversedYears()) {
                 for (String month : getMonths()) {
                     FormFilterData filterData = new FormFilterData.Builder()
                             .month(month)
@@ -129,7 +129,7 @@ public class PermitDocumentScraper {
         String hrefString = document.select("#pages, a").last().attr("href");
         int length = hrefString.length();
         if (length <= 0) return 0;
-        return Integer.parseInt(Character.toString(hrefString.charAt(length - 1)));
+        return Integer.parseInt(hrefString.substring(hrefString.lastIndexOf("page=")+5));
     }
 
     private List<String> takeElements(String selection, Document document) {

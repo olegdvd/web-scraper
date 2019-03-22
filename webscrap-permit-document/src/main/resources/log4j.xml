@@ -10,9 +10,24 @@
         </layout>
     </appender>
 
+    <appender name="rollingFile" class="org.apache.log4j.RollingFileAppender">
+        <param name="file" value="permit-document.log" />
+        <param name="maxFileSize" value="10MB" />
+        <param name="maxBackupIndex" value="5" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss} %-5p %m%n" />
+        </layout>
+    </appender>
+
+    <!--<logger name="log4j.rootLogger" additivity="true">-->
+        <!--<level value="DEBUG"/>-->
+        <!--<appender-ref ref="rollingFile"/>-->
+    <!--</logger>-->
+
     <root>
         <level value="INFO" />
         <appender-ref ref="console" />
+        <appender-ref ref="rollingFile"/>
     </root>
 
 </log4j:configuration>
