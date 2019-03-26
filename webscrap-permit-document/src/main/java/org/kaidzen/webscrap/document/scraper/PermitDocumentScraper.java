@@ -64,7 +64,7 @@ public class PermitDocumentScraper {
                     int lastPageNumber = getLastPage(document);
 //                    String presentPageFilter = getPresentPageFilter(document);
                     if (lastPageNumber != 0) {
-                        String permitsRequestUrl = permitDocumentsUrl.concat("&page=%s");
+                        String permitsRequestUrl = permitDocumentsUrl.concat("&&page=%s");
                         Stream<List<PermitDocument>> restListStream = restOfFilteredStream(permitsRequestUrl,
                                 lastPageNumber, filterData, cookie);
                         Stream.concat(baseListStream, restListStream)
