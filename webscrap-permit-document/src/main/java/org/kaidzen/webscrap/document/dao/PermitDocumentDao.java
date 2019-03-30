@@ -87,7 +87,7 @@ public class PermitDocumentDao implements GeneralDao<PermitDocument> {
                     ps.setString(2, document.getRegion());
                     ps.setString(3, document.getDocumentType());
                     ps.setString(4, document.getSubject());
-                    ps.setShort(5, document.getCategory());
+                    ps.setString(5, document.getCategory());
                     ps.setString(6, document.getCustomer());
                     ps.setString(7, document.getTechSupervision());
                     ps.setString(8, document.getDesigner());
@@ -165,7 +165,7 @@ public class PermitDocumentDao implements GeneralDao<PermitDocument> {
                     .region(rs.getString("region"))
                     .documentType(rs.getString("documentType"))
                     .subject(rs.getString("subject"))
-                    .category(rs.getShort("category"))
+                    .category(rs.getString("category"))
                     .customer(rs.getString("customer"))
                     .techSupervision(rs.getString("techSupervision"))
                     .designer(rs.getString("designer"))

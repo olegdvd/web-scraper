@@ -49,7 +49,7 @@ public class ElementsToPermitDocumentMapper implements BiFunction<Element, FormF
                     .region(getText(1))
                     .documentType(getText(2))
                     .subject(getText(3))
-                    .category(Short.valueOf(getText(4)))
+                    .category(getText(4))
                     .customer(getText(5))
                     .techSupervision(getText(6))
                     .designer(getText(7))
@@ -61,7 +61,7 @@ public class ElementsToPermitDocumentMapper implements BiFunction<Element, FormF
                     .timestamp()
                     .build());
         } catch (NumberFormatException e) {
-            LOG.info("Skipped for id:[{}], with [{}]", getText(0), filterData);
+            LOG.info("Skipped for id:[{}], with [{}]", getText(0), filterData, e.getMessage());
         }
         return Optional.empty();
     }

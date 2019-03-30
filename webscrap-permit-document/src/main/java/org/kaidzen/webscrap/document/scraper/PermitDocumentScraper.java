@@ -126,10 +126,14 @@ public class PermitDocumentScraper {
     }
 
     private int getLastPage(Document document) {
-        String hrefString = document.select("#pages, a").last().attr("href");
-        int length = hrefString.length();
+        Optional<String> maybeHrefString = Optional.ofNullable(document.select("#pages, a").last().attr("href"));
+        int length = maybeHrefString
+                .map(String::length)
+                .orElse(0);
         if (length <= 0) return 0;
-        return Integer.parseInt(hrefString.substring(hrefString.lastIndexOf("page=")+5));
+        return Integer.parseInt(maybeHrefString
+                .map(str -> str.substring(str.lastIndexOf("page=")+5))
+                .orElse("0"));
     }
 
     private List<String> takeElements(String selection, Document document) {

@@ -14,7 +14,7 @@ public class PermitDocument implements ScrappedModel {
     private String region;
     private String documentType;
     private String subject;
-    private short category;
+    private String category;
     private String customer;
     private String techSupervision;
     private String designer;
@@ -46,7 +46,7 @@ public class PermitDocument implements ScrappedModel {
                 region,
                 documentType,
                 subject,
-                Short.toString(category),
+                category,
                 customer,
                 techSupervision,
                 designer,
@@ -74,7 +74,7 @@ public class PermitDocument implements ScrappedModel {
         return subject;
     }
 
-    public short getCategory() {
+    public String getCategory() {
         return category;
     }
 
@@ -125,7 +125,7 @@ public class PermitDocument implements ScrappedModel {
                 region,
                 documentType,
                 subject,
-                Short.toString(category),
+                category,
                 customer,
                 techSupervision,
                 designer,
@@ -189,7 +189,7 @@ public class PermitDocument implements ScrappedModel {
                 .append(region)
                 .append(documentType)
                 .append(subject)
-                .append(Short.toString(category))
+                .append(category)
                 .append(customer)
                 .append(techSupervision)
                 .append(designer)
@@ -209,7 +209,7 @@ public class PermitDocument implements ScrappedModel {
         private String region;
         private String documentType;
         private String subject;
-        private short category;
+        private String category;
         private String customer;
         private String techSupervision;
         private String designer;
@@ -244,7 +244,7 @@ public class PermitDocument implements ScrappedModel {
             return this;
         }
 
-        public Builder category(short category) {
+        public Builder category(String category) {
             this.category = category;
             return this;
         }

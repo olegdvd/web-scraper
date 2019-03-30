@@ -11,7 +11,8 @@ public class FormFilterConstants {
 
     private static final List<String> years = Arrays.asList(
             //TODO check for 2010 - bug with requesting
-            "2011", "2013", "2014", "2015", "2016", "2017", "2018"
+            "2011", "2013", "2014", "2015", "2016", "2017", "2018", "2019"
+//            "2019"
     );
     private static final List<String> months = Arrays.asList(
             "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"
