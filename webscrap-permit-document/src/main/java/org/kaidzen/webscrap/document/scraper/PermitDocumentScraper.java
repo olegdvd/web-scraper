@@ -24,7 +24,6 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
-import static org.kaidzen.webscrap.document.model.FormFilterConstants.*;
 
 public class PermitDocumentScraper {
 
@@ -49,40 +48,31 @@ public class PermitDocumentScraper {
         this.objToCsvMapper = new PermitDocumentToCsvMapper();
     }
 
-    public void scrap(String fileName) {
-        for (String region : getRegions()) {
-            for (String year : getReversedYears()) {
-                for (String month : getMonths()) {
-                    FormFilterData filterData = new FormFilterData.Builder()
-                            .month(month)
-                            .year(year)
-                            .region(region)
-                            .build();
-                    Document document = filterPageToDocument(permitDocumentsUrl, filterData);
-                    Stream<List<PermitDocument>> baseListStream = Stream.of(elementsPermitDocument
-                            .takeElements("tr", document, filterData));
-                    int lastPageNumber = getLastPage(document);
+    public void scrap(FormFilterData filterData) {
+        Optional<Document> document = filterPageToDocument(permitDocumentsUrl, filterData);
+        if (document.isPresent()) {
+            Stream<List<PermitDocument>> baseListStream = Stream.of(elementsPermitDocument
+                    .takeElements("tr", document.get(), filterData));
+            int lastPageNumber = getLastPage(document.get());
 //                    String presentPageFilter = getPresentPageFilter(document);
-                    if (lastPageNumber != 0) {
-                        String permitsRequestUrl = permitDocumentsUrl.concat("&&page=%s");
-                        Stream<List<PermitDocument>> restListStream = restOfFilteredStream(permitsRequestUrl,
-                                lastPageNumber, filterData, cookie);
-                        Stream.concat(baseListStream, restListStream)
-                                .forEach(permitDocumentService::saveAll);
+            if (lastPageNumber != 0) {
+                String permitsRequestUrl = permitDocumentsUrl.concat("&&page=%s");
+                Stream<List<PermitDocument>> restListStream = restOfFilteredStream(permitsRequestUrl,
+                        lastPageNumber, filterData, cookie);
+                Stream.concat(baseListStream, restListStream)
+                        .forEach(permitDocumentService::saveAll);
 //                                .forEach(collectionList ->
 //                                        permitDocumentService.saveToFile(
 //                                        fileName, collectionList,
 //                                        presentPageFilter.concat("| " + String.format(permitsRequestUrl, lastPageNumber)))
-                        ;
-                    } else {
-                        baseListStream
-                                .forEach(permitDocumentService::saveAll);
+                ;
+            } else {
+                baseListStream
+                        .forEach(permitDocumentService::saveAll);
 //                                .forEach(collectionList -> permitDocumentService.saveToFile(fileName, collectionList, presentPageFilter.concat("| " + permitDocumentsUrl)));
-                    }
-
-                }
             }
         }
+
     }
 
     private String getPresentPageFilter(Document document) {
@@ -96,7 +86,7 @@ public class PermitDocumentScraper {
                 .map(document -> elementsPermitDocument.takeElements("tr", document, filterData));
     }
 
-    private Document filterPageToDocument(String url, FormFilterData filterData) {
+    private Optional<Document> filterPageToDocument(String url, FormFilterData filterData) {
         Optional<HttpUrl> targetUrl = Optional.ofNullable(HttpUrl.parse(url));
         if (targetUrl.isPresent()) {
             RequestBody formBody = new MultipartBody.Builder()
@@ -116,13 +106,14 @@ public class PermitDocumentScraper {
                 cookie = response.headers().get("Set-Cookie");
                 setCookie(cookie);
                 html = Objects.requireNonNull(response.body()).string();
+                return Optional.ofNullable(Jsoup.parse(html));
             } catch (IOException e) {
                 LOG.error("Source server is unreachable or changed/wrong URL: {} with parameters: {}", url, filterData);
             }
-            return Jsoup.parse(html);
+            return Optional.empty();
         }
         LOG.warn("Failed to scrap from URL: {}", url);
-        throw new RuntimeException("Failed to parse url: " + url);
+        return Optional.empty();
     }
 
     private int getLastPage(Document document) {
@@ -132,7 +123,7 @@ public class PermitDocumentScraper {
                 .orElse(0);
         if (length <= 0) return 0;
         return Integer.parseInt(maybeHrefString
-                .map(str -> str.substring(str.lastIndexOf("page=")+5))
+                .map(str -> str.substring(str.lastIndexOf("page=") + 5))
                 .orElse("0"));
     }
 

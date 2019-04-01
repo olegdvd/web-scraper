@@ -87,7 +87,7 @@ public class ConfigScrapPermitDocumentConfiguration {
 
     @Bean
     public PermitsScrapper permitsScrapper() {
-        return new PermitsScrapper(permitsUrl, permitDocumentScraper());
+        return new PermitsScrapper(permitDocumentScraper());
     }
 
     @Bean

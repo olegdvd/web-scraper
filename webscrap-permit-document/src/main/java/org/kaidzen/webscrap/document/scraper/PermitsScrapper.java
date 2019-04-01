@@ -1,36 +1,70 @@
 package org.kaidzen.webscrap.document.scraper;
 
+import org.apache.commons.lang3.StringUtils;
+import org.kaidzen.webscrap.document.model.FormFilterConstants;
 import org.kaidzen.webscrap.document.model.FormFilterData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static org.kaidzen.webscrap.document.model.FormFilterConstants.getRegions;
+import static org.kaidzen.webscrap.document.model.FormFilterConstants.getReversedYears;
 
 public class PermitsScrapper {
 
     private static final Logger LOG = LoggerFactory.getLogger(PermitsScrapper.class);
-    private final String baseUrl;
+
     private final PermitDocumentScraper permitDocumentScraper;
-    private final List<String> years = Arrays.asList(
-            "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019"
-    );
-    private final List<String> months = Arrays.asList(
-            "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"
-    );
-    private final List<String> regions = Arrays.asList(
-            "99", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14",
-            "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27"
-    );
-    private FormFilterData filterData;
 
 
-    public PermitsScrapper(String baseUrl, PermitDocumentScraper permitDocumentScraper) {
-        this.baseUrl = baseUrl;
+    public PermitsScrapper(PermitDocumentScraper permitDocumentScraper) {
         this.permitDocumentScraper = permitDocumentScraper;
     }
 
-    public void scrapPermits() {
+    public void scrapPermits(String year, String region) {
+        FormFilterConstants.getMonths().stream()
+                .sorted()
+                .peek(month -> grabAllByMonths(month, year, region))
+                .count();
     }
 
+    private void grabAllByMonths(String inMonth, String year, String region) {
+        List<String> scrapYears = yearsFromOrCurrent(year);
+        scrapYears.stream()
+                .forEach(inYear -> grabAllByRegions(inMonth, inYear, region));
+    }
+
+    private void grabAllByRegions(String inMonth, String inYear, String inRegion) {
+        if (StringUtils.isEmpty(inRegion)){
+            getRegions().stream()
+                    .forEach(region -> permitDocumentScraper.scrap(
+                            new FormFilterData.Builder()
+                                    .month(inMonth)
+                                    .year(inYear)
+                                    .region(region)
+                                    .build()
+                    ));
+        } else {
+            permitDocumentScraper.scrap(
+                    new FormFilterData.Builder()
+                            .month(inMonth)
+                            .year(inYear)
+                            .region(inRegion)
+                            .build()
+            );
+        }
+    }
+
+    private List<String> yearsFromOrCurrent(String year) {
+        String filteredYear = Optional.ofNullable(year)
+                .orElse(String.valueOf(LocalDateTime.now().getYear()));
+        return Optional.of(getReversedYears().stream()
+                .filter(presentYear -> presentYear.compareTo(filteredYear) <= 0)
+                .collect(Collectors.toList()))
+                .orElse(getReversedYears());
+    }
 }
