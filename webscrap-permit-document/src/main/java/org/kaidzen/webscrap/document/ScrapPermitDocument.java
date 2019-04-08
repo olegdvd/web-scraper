@@ -12,9 +12,12 @@ import org.springframework.context.ConfigurableApplicationContext;
 public class ScrapPermitDocument implements CommandLineRunner {
 
     public static void main(String[] args) {
-        System.out.println("Run with 2 optional parameters: YEAR and/or REGION, to specify exactly one region or smaller list of years");
         ConfigurableApplicationContext context = SpringApplication.run(ScrapPermitDocument.class, args);
         PermitsScrapper bean = context.getBean("permitsScrapper", PermitsScrapper.class);
+        System.out.println("Scrapper for permit documents");
+        System.out.println("Run without parameters: scarp all the regions from current year to 2011");
+        System.out.println("Run with 1 optional parameter: [YEAR], to scrap all the regions withing YEAR");
+        System.out.println("Run with 2 optional parameters: [YEAR REGION], to specify exactly one region withing YEAR");
         if (args.length == 0) {
             bean.scrapPermits(null, null);
             context.stop();

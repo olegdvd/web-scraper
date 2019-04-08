@@ -26,3 +26,8 @@
 /.mvn/
 src/main/resources/static/
 src/main/resources/templates/
+logs/
+webscrap-common/src/main/resources/
+webscrap-common/target/
+webscrap-issued-license/target/
+webscrap-permit-document/target/

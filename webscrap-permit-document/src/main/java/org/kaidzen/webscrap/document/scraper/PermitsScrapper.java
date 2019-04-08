@@ -1,16 +1,14 @@
 package org.kaidzen.webscrap.document.scraper;
 
-import org.apache.commons.lang3.StringUtils;
 import org.kaidzen.webscrap.document.model.FormFilterConstants;
 import org.kaidzen.webscrap.document.model.FormFilterData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toList;
 import static org.kaidzen.webscrap.document.model.FormFilterConstants.getRegions;
 import static org.kaidzen.webscrap.document.model.FormFilterConstants.getReversedYears;
 
@@ -26,45 +24,57 @@ public class PermitsScrapper {
     }
 
     public void scrapPermits(String year, String region) {
+        List<String> scrapYears = yearsListOrThis(year);
+        scrapYears.stream()
+                .forEach(inYear -> grabAllByRegions(inYear, region));
+
+
+    }
+
+    private void grabAllByMonths(String inYear, String inRegion) {
         FormFilterConstants.getMonths().stream()
                 .sorted()
-                .peek(month -> grabAllByMonths(month, year, region))
+                .peek(month -> permitDocumentScraper.scrap(
+                        new FormFilterData.Builder()
+                                .month(month)
+                                .year(inYear)
+                                .region(inRegion)
+                                .build()
+                ))
                 .count();
     }
 
-    private void grabAllByMonths(String inMonth, String year, String region) {
-        List<String> scrapYears = yearsFromOrCurrent(year);
-        scrapYears.stream()
-                .forEach(inYear -> grabAllByRegions(inMonth, inYear, region));
-    }
+    private void grabAllByRegions(String inYear, String inRegion) {
+        String filteredRegion = Optional.ofNullable(inRegion)
+                .filter(this::checkIfNumber)
+                .orElse("");
 
-    private void grabAllByRegions(String inMonth, String inYear, String inRegion) {
-        if (StringUtils.isEmpty(inRegion)){
-            getRegions().stream()
-                    .forEach(region -> permitDocumentScraper.scrap(
-                            new FormFilterData.Builder()
-                                    .month(inMonth)
-                                    .year(inYear)
-                                    .region(region)
-                                    .build()
-                    ));
+        List<String> regions = Optional.of(getRegions().stream()
+                .filter(presentRegion -> presentRegion.compareTo(filteredRegion) == 0)
+                .collect(toList()))
+                .orElse(getRegions());
+
+        if (regions.size()>1){
+            regions.forEach(region -> grabAllByMonths(inYear, region));
         } else {
-            permitDocumentScraper.scrap(
-                    new FormFilterData.Builder()
-                            .month(inMonth)
-                            .year(inYear)
-                            .region(inRegion)
-                            .build()
-            );
+            getRegions().stream()
+                    .forEach(region -> grabAllByMonths(inYear, region));
         }
     }
 
-    private List<String> yearsFromOrCurrent(String year) {
+    private boolean checkIfNumber(String region) {
+        for (char ch : region.toCharArray()) {
+            if (!Character.isDigit(ch)) return false;
+        }
+        return true;
+    }
+
+    private List<String> yearsListOrThis(String year) {
         String filteredYear = Optional.ofNullable(year)
-                .orElse(String.valueOf(LocalDateTime.now().getYear()));
+                .orElse("");
         return Optional.of(getReversedYears().stream()
-                .filter(presentYear -> presentYear.compareTo(filteredYear) <= 0)
-                .collect(Collectors.toList()))
+                .filter(presentYear -> presentYear.compareTo(filteredYear) == 0)
+                .collect(toList()))
                 .orElse(getReversedYears());
     }
 }
