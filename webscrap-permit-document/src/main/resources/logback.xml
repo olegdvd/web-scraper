@@ -3,6 +3,15 @@
 
     <property name="DEV_HOME" value="logs" />
 
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- encoders are assigned the type
+             ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+        <encoder>
+            <pattern>%-4relative [%thread] %-5level %logger{35} - %msg %n</pattern>
+        </encoder>
+    </appender>
+
+
     <appender name="FILE-AUDIT"
               class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${DEV_HOME}/permit-documents.log</file>
@@ -24,18 +33,33 @@
 
     </appender>
 
-    <logger name="org.kaidzen.webscrap.document" level="info"
+    <logger name="org.kaidzen.webscrap.document" level="debug"
             additivity="false">
         <appender-ref ref="FILE-AUDIT" />
+        <appender-ref ref="STDOUT" />
     </logger>
 
     <logger name="org.springframework.web" level="error"
             additivity="false">
         <appender-ref ref="FILE-AUDIT" />
+        <appender-ref ref="STDOUT" />
+    </logger>
+
+    <logger name="org.springframework.jdbc" level="info"
+            additivity="false">
+        <appender-ref ref="FILE-AUDIT" />
+        <appender-ref ref="STDOUT" />
+    </logger>
+
+    <logger name="org.springframework.beans" level="info"
+            additivity="false">
+        <appender-ref ref="FILE-AUDIT" />
+        <appender-ref ref="STDOUT" />
     </logger>
 
     <root level="debug">
         <appender-ref ref="FILE-AUDIT" />
+        <appender-ref ref="STDOUT" />
     </root>
 
 </configuration>

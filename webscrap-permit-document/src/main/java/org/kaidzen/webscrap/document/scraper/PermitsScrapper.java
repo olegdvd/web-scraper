@@ -42,6 +42,7 @@ public class PermitsScrapper {
                                 .build()
                 ))
                 .count();
+        System.exit(0);
     }
 
     private void grabAllByRegions(String inYear, String inRegion) {
@@ -54,7 +55,7 @@ public class PermitsScrapper {
                 .collect(toList()))
                 .orElse(getRegions());
 
-        if (regions.size()>1){
+        if (!regions.isEmpty()){
             regions.forEach(region -> grabAllByMonths(inYear, region));
         } else {
             getRegions().stream()

@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS permitdocuments (
 documentId  VARCHAR(22) NOT NULL,
 region  VARCHAR(22) NOT NULL,
 documentType  VARCHAR(60) NOT NULL,
-subject VARCHAR(1500) NOT NULL,
+subject VARCHAR(3000) NOT NULL,
 category  VARCHAR(15) NOT NULL,
 customer VARCHAR(450) NOT NULL,
 techSupervision VARCHAR(255) NOT NULL,
