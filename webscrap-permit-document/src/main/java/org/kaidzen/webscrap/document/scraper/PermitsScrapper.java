@@ -32,7 +32,7 @@ public class PermitsScrapper {
     }
 
     private void grabAllByMonths(String inYear, String inRegion) {
-        FormFilterConstants.getMonths().stream()
+        long result = FormFilterConstants.getMonths().stream()
                 .sorted()
                 .peek(month -> permitDocumentScraper.scrap(
                         new FormFilterData.Builder()
@@ -42,7 +42,7 @@ public class PermitsScrapper {
                                 .build()
                 ))
                 .count();
-        System.exit(0);
+        LOG.info("There were {} months scrapped", result);
     }
 
     private void grabAllByRegions(String inYear, String inRegion) {
@@ -55,12 +55,13 @@ public class PermitsScrapper {
                 .collect(toList()))
                 .orElse(getRegions());
 
-        if (!regions.isEmpty()){
+        if (!regions.isEmpty()) {
             regions.forEach(region -> grabAllByMonths(inYear, region));
         } else {
             getRegions().stream()
                     .forEach(region -> grabAllByMonths(inYear, region));
         }
+        System.exit(0);
     }
 
     private boolean checkIfNumber(String region) {
