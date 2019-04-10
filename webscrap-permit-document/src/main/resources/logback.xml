@@ -39,13 +39,13 @@
         <appender-ref ref="STDOUT" />
     </logger>
 
-    <logger name="org.springframework.web" level="error"
+    <logger name="org.springframework" level="error"
             additivity="false">
         <appender-ref ref="FILE-AUDIT" />
         <appender-ref ref="STDOUT" />
     </logger>
 
-    <logger name="org.springframework.jdbc" level="info"
+    <logger name="org.springframework.jdbc" level="error"
             additivity="false">
         <appender-ref ref="FILE-AUDIT" />
         <appender-ref ref="STDOUT" />
@@ -57,7 +57,7 @@
         <appender-ref ref="STDOUT" />
     </logger>
 
-    <root level="debug">
+    <root level="error">
         <appender-ref ref="FILE-AUDIT" />
         <appender-ref ref="STDOUT" />
     </root>
