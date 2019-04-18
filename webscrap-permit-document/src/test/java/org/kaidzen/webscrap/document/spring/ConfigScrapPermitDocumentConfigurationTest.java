@@ -16,5 +16,4 @@ public class ConfigScrapPermitDocumentConfigurationTest {
 
         assertNotNull(testBean);
     }
-
 }

@@ -74,9 +74,9 @@ public class PermitsScrapper {
     private List<String> yearsListOrThis(String year) {
         String filteredYear = Optional.ofNullable(year)
                 .orElse("");
-        return Optional.of(getReversedYears().stream()
+        List<String> list = getReversedYears().stream()
                 .filter(presentYear -> presentYear.compareTo(filteredYear) == 0)
-                .collect(toList()))
-                .orElse(getReversedYears());
+                .collect(toList());
+        return list.isEmpty() ? getReversedYears() : list;
     }
 }

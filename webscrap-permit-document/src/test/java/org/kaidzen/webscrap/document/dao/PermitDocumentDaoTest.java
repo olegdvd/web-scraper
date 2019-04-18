@@ -25,7 +25,7 @@ public class PermitDocumentDaoTest {
             "ІУ 114160911157"
     );
 
-    List<PermitDocument> newDocuments = IntStream.range(0, ids.size()).boxed()
+    private List<PermitDocument> newDocuments = IntStream.range(0, ids.size()).boxed()
             .map(integer -> new PermitDocument.Builder(new StandardTimeClock())
                     .documentId(ids.get(integer))
                     .customer(String.valueOf(integer))
