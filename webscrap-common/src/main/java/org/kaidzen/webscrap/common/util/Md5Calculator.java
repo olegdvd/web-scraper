@@ -1,12 +1,9 @@
 package org.kaidzen.webscrap.common.util;
 
 import javax.xml.bind.DatatypeConverter;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
-
-import static java.util.stream.Collectors.joining;
 
 public class Md5Calculator {
 
@@ -15,10 +12,9 @@ public class Md5Calculator {
     private Md5Calculator() {
     }
 
-    public static String calculateMd5(String... args){
-        String joinedString = Arrays.stream(args)
-                .collect(joining(""));
-        MD_5.update(joinedString.getBytes(Charset.forName("UTF-8")));
+    public static String calculateMd5(String... args) {
+        String joinedString = String.join("", args);
+        MD_5.update(joinedString.getBytes(StandardCharsets.UTF_8));
         byte[] digestBites = MD_5.digest();
         return DatatypeConverter.printHexBinary(digestBites).toUpperCase();
     }
@@ -27,7 +23,7 @@ public class Md5Calculator {
         try {
             return MessageDigest.getInstance("MD5");
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("Failed to instantiate MD5", e);
+            throw new Md5Exception("Failed to instantiate MD5", e);
         }
     }
 }

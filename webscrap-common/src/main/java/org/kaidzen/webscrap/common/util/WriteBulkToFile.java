@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -33,7 +33,7 @@ public class WriteBulkToFile {
                 LOG.info("New file created: {}", resultPath);
             }
             List<String> result = getMarkedStrings(stringsList, presentPageFilter);
-            res = Files.write(filePath, result, Charset.forName("UTF-8"), StandardOpenOption.APPEND, StandardOpenOption.WRITE);
+            res = Files.write(filePath, result, StandardCharsets.UTF_8, StandardOpenOption.APPEND, StandardOpenOption.WRITE);
 
             LOG.info("Added to file: {}, {} lines", res, stringsList.size());
             return res;
