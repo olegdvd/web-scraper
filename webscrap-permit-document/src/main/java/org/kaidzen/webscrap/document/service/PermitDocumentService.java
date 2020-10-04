@@ -8,7 +8,10 @@ import org.springframework.stereotype.Service;
 import java.nio.file.Path;
 import java.util.List;
 
-@Service
+/**
+ *
+ */
+//@Service
 public class PermitDocumentService implements ScrapPermitService<PermitDocument> {
 
     private final WriteBulkToFile bulkToFile;
@@ -24,16 +27,30 @@ public class PermitDocumentService implements ScrapPermitService<PermitDocument>
         permitDocumentDao.add(document);
     }
 
+    /**
+     *
+     * @param documents
+     */
     @Override
     public void saveAll(List<PermitDocument> documents) {
         permitDocumentDao.addAll(documents);
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public List<PermitDocument> findAllDocuments() {
         return permitDocumentDao.getAll();
     }
 
+    /**
+     *
+     * @param fileName
+     * @param licenses
+     * @return
+     */
     @Override
     public Path saveToFile(String fileName, List<String> licenses) {
         return bulkToFile.writeToFile(fileName, licenses);

@@ -18,7 +18,7 @@ import java.util.Map;
 
 import static java.util.stream.Collectors.*;
 
-@Repository
+//@Repository
 public class PermitDocumentDao implements GeneralDao<PermitDocument> {
 
     private static final Logger LOG = LoggerFactory.getLogger(PermitDocumentDao.class);

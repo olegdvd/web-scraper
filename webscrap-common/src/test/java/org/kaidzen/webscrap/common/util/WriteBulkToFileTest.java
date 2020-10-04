@@ -11,6 +11,7 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class WriteBulkToFileTest {
@@ -30,7 +31,7 @@ public class WriteBulkToFileTest {
         result = bulkToFile.writeToFile(FILE_NAME, LIST);
 
         List<String> content = Files.<List<String>>readAllLines(result);
-        assertTrue(LIST.get(0).equals(content.get(0)));
+        assertEquals(LIST.get(0), content.get(0));
     }
 
     @After
